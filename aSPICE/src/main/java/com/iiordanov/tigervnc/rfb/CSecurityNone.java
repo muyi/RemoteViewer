@@ -20,8 +20,17 @@ package com.iiordanov.tigervnc.rfb;
 
 public class CSecurityNone extends CSecurity {
 
-  public boolean processMsg(CConnection cc) { return true; }
-  public int getType() { return Security.secTypeNone; }
-  public String description() { return "No Encryption"; }
-  static LogWriter vlog = new LogWriter("CSecurityNone");
+    public boolean processMsg(CConnection cc) {
+        return true;
+    }
+
+    public int getType() {
+        return Security.secTypeNone;
+    }
+
+    public String description() {
+        return "No Encryption";
+    }
+
+    static LogWriter vlog = new LogWriter("CSecurityNone");
 }

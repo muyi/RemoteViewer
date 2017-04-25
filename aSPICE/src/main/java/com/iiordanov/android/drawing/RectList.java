@@ -5,9 +5,9 @@ package com.iiordanov.android.drawing;
 
 import android.graphics.Rect;
 
-import java.util.ArrayList;
-
 import com.iiordanov.util.ObjectPool;
+
+import java.util.ArrayList;
 
 /**
  * A list of rectangular regions that together represent an area of interest.  Provides
@@ -252,7 +252,7 @@ public class RectList {
      * @author Michael A. MacDonald
      */
     static class NonOverlappingRects {
-        ObjectPool.Entry<Rect>[] rectEntries;
+        ObjectPool.Entry[] rectEntries;
         int count;
         static final int MAX_RECTS = 8;
 

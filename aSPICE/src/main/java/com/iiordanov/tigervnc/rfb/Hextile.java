@@ -19,9 +19,9 @@
 package com.iiordanov.tigervnc.rfb;
 
 public class Hextile {
-  public static final int raw = (1 << 0);
-  public static final int bgSpecified = (1 << 1);
-  public static final int fgSpecified = (1 << 2);
-  public static final int anySubrects = (1 << 3);
-  public static final int subrectsColoured = (1 << 4);
+    public static final int raw = (1 << 0);
+    public static final int bgSpecified = (1 << 1);
+    public static final int fgSpecified = (1 << 2);
+    public static final int anySubrects = (1 << 3);
+    public static final int subrectsColoured = (1 << 4);
 }

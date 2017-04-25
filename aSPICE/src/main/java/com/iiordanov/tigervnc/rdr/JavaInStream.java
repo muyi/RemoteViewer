@@ -24,139 +24,148 @@ package com.iiordanov.tigervnc.rdr;
 
 public class JavaInStream extends InStream {
 
-  static final int defaultBufSize = 8192;
-  static final int minBulkSize = 1024;
+    static final int defaultBufSize = 8192;
+    static final int minBulkSize = 1024;
 
-  public JavaInStream(java.io.InputStream jis_, int bufSize_) {
-    jis = jis_;
-    bufSize = bufSize_;
-    b = new byte[bufSize];
-    ptr = end = offset = 0;
-    timing = false;
-    timeWaitedIn100us = 5;
-    timedKbits = 0;
-  }
-
-  public JavaInStream(java.io.InputStream jis_) { this(jis_, defaultBufSize); }
-
-  public void readBytes(byte[] data, int dataPtr, int length) {
-    if (length < minBulkSize) {
-      super.readBytes(data, dataPtr, length);
-      return;
+    public JavaInStream(java.io.InputStream jis_, int bufSize_) {
+        jis = jis_;
+        bufSize = bufSize_;
+        b = new byte[bufSize];
+        ptr = end = offset = 0;
+        timing = false;
+        timeWaitedIn100us = 5;
+        timedKbits = 0;
     }
 
-    int n = end - ptr;
-    if (n > length) n = length;
-
-    System.arraycopy(b, ptr, data, dataPtr, n);
-    dataPtr += n;
-    length -= n;
-    ptr += n;
-
-    while (length > 0) {
-      n = read(data, dataPtr, length);
-      dataPtr += n;
-      length -= n;
-      offset += n;
-    }
-  }
-
-  public int pos() { return offset + ptr; }
-
-  public void startTiming() {
-    timing = true;
-
-    // Carry over up to 1s worth of previous rate for smoothing.
-
-    if (timeWaitedIn100us > 10000) {
-      timedKbits = timedKbits * 10000 / timeWaitedIn100us;
-      timeWaitedIn100us = 10000;
-    }
-  }
-
-  public void stopTiming() {
-    timing = false; 
-    if (timeWaitedIn100us < timedKbits/2)
-      timeWaitedIn100us = timedKbits/2; // upper limit 20Mbit/s
-  }
-
-  public long kbitsPerSecond() {
-    return timedKbits * 10000 / timeWaitedIn100us;
-  }
-
-  public long timeWaited() { return timeWaitedIn100us; }
-
-  protected int overrun(int itemSize, int nItems, boolean wait) {
-    if (itemSize > bufSize)
-      throw new Exception("JavaInStream overrun: max itemSize exceeded");
-
-    if (end - ptr != 0)
-      System.arraycopy(b, ptr, b, 0, end - ptr);
-
-    offset += ptr;
-    end -= ptr;
-    ptr = 0;
-
-    while (end < itemSize) {
-      int bytes_to_read = bufSize - end;
-
-      if (!timing) {
-        bytes_to_read = Math.min(bytes_to_read, Math.max(itemSize*nItems, 8));
-      }
-
-      int n = read(b, end, bytes_to_read, wait);
-
-      end += n;
+    public JavaInStream(java.io.InputStream jis_) {
+        this(jis_, defaultBufSize);
     }
 
-    if (itemSize * nItems > end)
-      nItems = end / itemSize;
-
-    return nItems;
-  }
-
-  private int read(byte[] buf, int bufPtr, int len, boolean wait) {
-      long before = 0;
-      if (timing)
-        before = System.nanoTime();
-
-      int n = -1;
-      try {
-        n = jis.read(buf, bufPtr, len);
-      } catch (java.io.IOException e) {
-        throw new IOException(e);
-      }
-
-      if (n < 0) throw new EndOfStream();
-      if (n == 0) return 0;
-
-      if (timing) {
-        long after = System.nanoTime();
-        long newTimeWaited = (after - before) / 100000;
-        int newKbits = n * 8 / 1000;
-
-        // limit rate to between 10kbit/s and 40Mbit/s
-
-        if (newTimeWaited > newKbits*1000) {
-          newTimeWaited = newKbits*1000;
-        } else if (newTimeWaited < newKbits/4) {
-          newTimeWaited = newKbits/4;
+    public void readBytes(byte[] data, int dataPtr, int length) {
+        if (length < minBulkSize) {
+            super.readBytes(data, dataPtr, length);
+            return;
         }
 
-        timeWaitedIn100us += newTimeWaited;
-        timedKbits += newKbits;
-      }
+        int n = end - ptr;
+        if (n > length) n = length;
 
-      return n;
+        System.arraycopy(b, ptr, data, dataPtr, n);
+        dataPtr += n;
+        length -= n;
+        ptr += n;
 
-  }
-  private int read(byte[] buf, int bufPtr, int len) { return read(buf, bufPtr, len, true); }
+        while (length > 0) {
+            n = read(data, dataPtr, length);
+            dataPtr += n;
+            length -= n;
+            offset += n;
+        }
+    }
 
-  private java.io.InputStream jis;
-  private int offset;
-  private int bufSize;
+    public int pos() {
+        return offset + ptr;
+    }
 
-  boolean timing;
-  long timeWaitedIn100us;
-  long timedKbits;
+    public void startTiming() {
+        timing = true;
+
+        // Carry over up to 1s worth of previous rate for smoothing.
+
+        if (timeWaitedIn100us > 10000) {
+            timedKbits = timedKbits * 10000 / timeWaitedIn100us;
+            timeWaitedIn100us = 10000;
+        }
+    }
+
+    public void stopTiming() {
+        timing = false;
+        if (timeWaitedIn100us < timedKbits / 2)
+            timeWaitedIn100us = timedKbits / 2; // upper limit 20Mbit/s
+    }
+
+    public long kbitsPerSecond() {
+        return timedKbits * 10000 / timeWaitedIn100us;
+    }
+
+    public long timeWaited() {
+        return timeWaitedIn100us;
+    }
+
+    protected int overrun(int itemSize, int nItems, boolean wait) {
+        if (itemSize > bufSize)
+            throw new Exception("JavaInStream overrun: max itemSize exceeded");
+
+        if (end - ptr != 0)
+            System.arraycopy(b, ptr, b, 0, end - ptr);
+
+        offset += ptr;
+        end -= ptr;
+        ptr = 0;
+
+        while (end < itemSize) {
+            int bytes_to_read = bufSize - end;
+
+            if (!timing) {
+                bytes_to_read = Math.min(bytes_to_read, Math.max(itemSize * nItems, 8));
+            }
+
+            int n = read(b, end, bytes_to_read, wait);
+
+            end += n;
+        }
+
+        if (itemSize * nItems > end)
+            nItems = end / itemSize;
+
+        return nItems;
+    }
+
+    private int read(byte[] buf, int bufPtr, int len, boolean wait) {
+        long before = 0;
+        if (timing)
+            before = System.nanoTime();
+
+        int n = -1;
+        try {
+            n = jis.read(buf, bufPtr, len);
+        } catch (java.io.IOException e) {
+            throw new IOException(e);
+        }
+
+        if (n < 0) throw new EndOfStream();
+        if (n == 0) return 0;
+
+        if (timing) {
+            long after = System.nanoTime();
+            long newTimeWaited = (after - before) / 100000;
+            int newKbits = n * 8 / 1000;
+
+            // limit rate to between 10kbit/s and 40Mbit/s
+
+            if (newTimeWaited > newKbits * 1000) {
+                newTimeWaited = newKbits * 1000;
+            } else if (newTimeWaited < newKbits / 4) {
+                newTimeWaited = newKbits / 4;
+            }
+
+            timeWaitedIn100us += newTimeWaited;
+            timedKbits += newKbits;
+        }
+
+        return n;
+
+    }
+
+    private int read(byte[] buf, int bufPtr, int len) {
+        return read(buf, bufPtr, len, true);
+    }
+
+    private java.io.InputStream jis;
+    private int offset;
+    private int bufSize;
+
+    boolean timing;
+    long timeWaitedIn100us;
+    long timedKbits;
 }

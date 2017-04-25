@@ -18,139 +18,140 @@
 
 package com.iiordanov.tigervnc.rfb;
 
-import com.iiordanov.tigervnc.rdr.*;
+import com.iiordanov.tigervnc.rdr.InStream;
+import com.iiordanov.tigervnc.rdr.ZlibInStream;
 
 public class ZRLEDecoder extends Decoder {
 
-  public ZRLEDecoder(CMsgReader reader_) {
-    reader = reader_;
-    zis = new ZlibInStream();
-  }
-
-  public void readRect(Rect r, CMsgHandler handler) {
-    InStream is = reader.getInStream();
-    int[] buf = reader.getImageBuf(64 * 64 * 4);
-    int bpp = handler.cp.pf().bpp;
-    int bytesPerPixel = (bpp > 24 ? 3 : bpp / 8);
-    boolean bigEndian = handler.cp.pf().bigEndian;
-
-    int length = is.readU32();
-    zis.setUnderlying(is, length);
-    Rect t = new Rect();
-
-    for (t.tl.y = r.tl.y; t.tl.y < r.br.y; t.tl.y += 64) {
-
-      t.br.y = Math.min(r.br.y, t.tl.y + 64);
-
-      for (t.tl.x = r.tl.x; t.tl.x < r.br.x; t.tl.x += 64) {
-
-        t.br.x = Math.min(r.br.x, t.tl.x + 64);
-
-        int mode = zis.readU8();
-        boolean rle = (mode & 128) != 0;
-        int palSize = mode & 127;
-        int[] palette = new int[128];
-
-        zis.readPixels(palette, palSize, bytesPerPixel, bigEndian);
-        
-        if (palSize == 1) {
-          int pix = palette[0];
-          handler.fillRect(t, pix);
-          continue;
-        }
-
-        if (!rle) {
-          if (palSize == 0) {
-
-            // raw
-
-            zis.readPixels(buf, t.area(), bytesPerPixel, bigEndian);
-
-          } else {
-
-            // packed pixels
-            int bppp = ((palSize > 16) ? 8 :
-                        ((palSize > 4) ? 4 : ((palSize > 2) ? 2 : 1)));
-
-            int ptr = 0;
-
-            for (int i = 0; i < t.height(); i++) {
-              int eol = ptr + t.width();
-              int b = 0;
-              int nbits = 0;
-
-              while (ptr < eol) {
-                if (nbits == 0) {
-                  b = zis.readU8();
-                  nbits = 8;
-                }
-                nbits -= bppp;
-                int index = (b >> nbits) & ((1 << bppp) - 1) & 127;
-                buf[ptr++] = palette[index];
-              }
-            }
-          }
-
-        } else {
-
-          if (palSize == 0) {
-
-            // plain RLE
-
-            int ptr = 0;
-            int end = ptr + t.area();
-            while (ptr < end) {
-              int pix = zis.readPixel(bytesPerPixel, bigEndian);
-              int len = 1;
-              int b;
-              do {
-                b = zis.readU8();
-                len += b;
-              } while (b == 255);
-
-              if (!(len <= end - ptr))
-                throw new Exception("ZRLEDecoder: assertion (len <= end - ptr)"
-                                    +" failed");
-
-              while (len-- > 0) buf[ptr++] = pix;
-            }
-          } else {
-
-            // palette RLE
-
-            int ptr = 0;
-            int end = ptr + t.area();
-            while (ptr < end) {
-              int index = zis.readU8();
-              int len = 1;
-              if ((index & 128) != 0) {
-                int b;
-                do {
-                  b = zis.readU8();
-                  len += b;
-                } while (b == 255);
-
-                if (!(len <= end - ptr))
-                  throw new Exception("ZRLEDecoder: assertion "
-                                      +"(len <= end - ptr) failed");
-              }
-
-              index &= 127;
-
-              int pix = palette[index];
-
-              while (len-- > 0) buf[ptr++] = pix;
-            }
-          }
-        }
-
-        handler.imageRect(t, buf);
-      }
+    public ZRLEDecoder(CMsgReader reader_) {
+        reader = reader_;
+        zis = new ZlibInStream();
     }
 
-    zis.reset();
-  }
+    public void readRect(Rect r, CMsgHandler handler) {
+        InStream is = reader.getInStream();
+        int[] buf = reader.getImageBuf(64 * 64 * 4);
+        int bpp = handler.cp.pf().bpp;
+        int bytesPerPixel = (bpp > 24 ? 3 : bpp / 8);
+        boolean bigEndian = handler.cp.pf().bigEndian;
 
-  CMsgReader reader;
-  ZlibInStream zis;
+        int length = is.readU32();
+        zis.setUnderlying(is, length);
+        Rect t = new Rect();
+
+        for (t.tl.y = r.tl.y; t.tl.y < r.br.y; t.tl.y += 64) {
+
+            t.br.y = Math.min(r.br.y, t.tl.y + 64);
+
+            for (t.tl.x = r.tl.x; t.tl.x < r.br.x; t.tl.x += 64) {
+
+                t.br.x = Math.min(r.br.x, t.tl.x + 64);
+
+                int mode = zis.readU8();
+                boolean rle = (mode & 128) != 0;
+                int palSize = mode & 127;
+                int[] palette = new int[128];
+
+                zis.readPixels(palette, palSize, bytesPerPixel, bigEndian);
+
+                if (palSize == 1) {
+                    int pix = palette[0];
+                    handler.fillRect(t, pix);
+                    continue;
+                }
+
+                if (!rle) {
+                    if (palSize == 0) {
+
+                        // raw
+
+                        zis.readPixels(buf, t.area(), bytesPerPixel, bigEndian);
+
+                    } else {
+
+                        // packed pixels
+                        int bppp = ((palSize > 16) ? 8 :
+                                ((palSize > 4) ? 4 : ((palSize > 2) ? 2 : 1)));
+
+                        int ptr = 0;
+
+                        for (int i = 0; i < t.height(); i++) {
+                            int eol = ptr + t.width();
+                            int b = 0;
+                            int nbits = 0;
+
+                            while (ptr < eol) {
+                                if (nbits == 0) {
+                                    b = zis.readU8();
+                                    nbits = 8;
+                                }
+                                nbits -= bppp;
+                                int index = (b >> nbits) & ((1 << bppp) - 1) & 127;
+                                buf[ptr++] = palette[index];
+                            }
+                        }
+                    }
+
+                } else {
+
+                    if (palSize == 0) {
+
+                        // plain RLE
+
+                        int ptr = 0;
+                        int end = ptr + t.area();
+                        while (ptr < end) {
+                            int pix = zis.readPixel(bytesPerPixel, bigEndian);
+                            int len = 1;
+                            int b;
+                            do {
+                                b = zis.readU8();
+                                len += b;
+                            } while (b == 255);
+
+                            if (!(len <= end - ptr))
+                                throw new Exception("ZRLEDecoder: assertion (len <= end - ptr)"
+                                        + " failed");
+
+                            while (len-- > 0) buf[ptr++] = pix;
+                        }
+                    } else {
+
+                        // palette RLE
+
+                        int ptr = 0;
+                        int end = ptr + t.area();
+                        while (ptr < end) {
+                            int index = zis.readU8();
+                            int len = 1;
+                            if ((index & 128) != 0) {
+                                int b;
+                                do {
+                                    b = zis.readU8();
+                                    len += b;
+                                } while (b == 255);
+
+                                if (!(len <= end - ptr))
+                                    throw new Exception("ZRLEDecoder: assertion "
+                                            + "(len <= end - ptr) failed");
+                            }
+
+                            index &= 127;
+
+                            int pix = palette[index];
+
+                            while (len-- > 0) buf[ptr++] = pix;
+                        }
+                    }
+                }
+
+                handler.imageRect(t, buf);
+            }
+        }
+
+        zis.reset();
+    }
+
+    CMsgReader reader;
+    ZlibInStream zis;
 }

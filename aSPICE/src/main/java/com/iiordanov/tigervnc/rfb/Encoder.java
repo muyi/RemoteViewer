@@ -19,7 +19,7 @@
 package com.iiordanov.tigervnc.rfb;
 
 public class Encoder {
-  static public boolean supported(int encoding) {
-    return false;
-  }
+    static public boolean supported(int encoding) {
+        return false;
+    }
 }

@@ -19,22 +19,22 @@
 package com.iiordanov.tigervnc.rfb;
 
 public class MsgTypes {
-  // server to client
+    // server to client
 
-  public static final int msgTypeFramebufferUpdate = 0;
-  public static final int msgTypeSetColourMapEntries = 1;
-  public static final int msgTypeBell = 2;
-  public static final int msgTypeServerCutText = 3;
+    public static final int msgTypeFramebufferUpdate = 0;
+    public static final int msgTypeSetColourMapEntries = 1;
+    public static final int msgTypeBell = 2;
+    public static final int msgTypeServerCutText = 3;
 
-  // client to server
+    // client to server
 
-  public static final int msgTypeSetPixelFormat = 0;
-  public static final int msgTypeFixColourMapEntries = 1;
-  public static final int msgTypeSetEncodings = 2;
-  public static final int msgTypeFramebufferUpdateRequest = 3;
-  public static final int msgTypeKeyEvent = 4;
-  public static final int msgTypePointerEvent = 5;
-  public static final int msgTypeClientCutText = 6;
+    public static final int msgTypeSetPixelFormat = 0;
+    public static final int msgTypeFixColourMapEntries = 1;
+    public static final int msgTypeSetEncodings = 2;
+    public static final int msgTypeFramebufferUpdateRequest = 3;
+    public static final int msgTypeKeyEvent = 4;
+    public static final int msgTypePointerEvent = 5;
+    public static final int msgTypeClientCutText = 6;
 
-  public static final int msgTypeSetDesktopSize = 251;
+    public static final int msgTypeSetDesktopSize = 251;
 }

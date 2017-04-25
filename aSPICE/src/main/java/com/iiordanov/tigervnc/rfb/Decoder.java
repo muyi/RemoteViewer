@@ -22,48 +22,58 @@ import com.iiordanov.aSPICE.RemoteCanvas;
 
 abstract public class Decoder {
 
-  abstract public void readRect(Rect r, CMsgHandler handler);
+    abstract public void readRect(Rect r, CMsgHandler handler);
 
-  static public boolean supported(int encoding) 
-  {
+    static public boolean supported(int encoding) {
 /*
     return encoding <= Encodings.encodingMax && createFns[encoding];
 */
-    return (encoding == Encodings.encodingRaw || 
-            encoding == Encodings.encodingRRE ||
-            encoding == Encodings.encodingHextile || 
-            encoding == Encodings.encodingTight ||
-            encoding == Encodings.encodingZRLE);
-  }
-  static public Decoder createDecoder(int encoding, CMsgReader reader) {
+        return (encoding == Encodings.encodingRaw ||
+                encoding == Encodings.encodingRRE ||
+                encoding == Encodings.encodingHextile ||
+                encoding == Encodings.encodingTight ||
+                encoding == Encodings.encodingZRLE);
+    }
+
+    static public Decoder createDecoder(int encoding, CMsgReader reader) {
 /*
     if (encoding <= Encodings.encodingMax && createFns[encoding])
       return (createFns[encoding])(reader);
     return 0;
 */
-    switch(encoding) {
-    case Encodings.encodingRaw:     return new RawDecoder(reader);
-    case Encodings.encodingRRE:     return new RREDecoder(reader);
-    case Encodings.encodingHextile: return new HextileDecoder(reader);
-    case Encodings.encodingTight:   return new TightDecoder(reader);
-    case Encodings.encodingZRLE:    return new ZRLEDecoder(reader);
+        switch (encoding) {
+            case Encodings.encodingRaw:
+                return new RawDecoder(reader);
+            case Encodings.encodingRRE:
+                return new RREDecoder(reader);
+            case Encodings.encodingHextile:
+                return new HextileDecoder(reader);
+            case Encodings.encodingTight:
+                return new TightDecoder(reader);
+            case Encodings.encodingZRLE:
+                return new ZRLEDecoder(reader);
+        }
+        return null;
     }
-    return null;
-  }
-  
-  static public Decoder createDecoder(int encoding, CMsgReader reader, RemoteCanvas c) {
+
+    static public Decoder createDecoder(int encoding, CMsgReader reader, RemoteCanvas c) {
 /*
     if (encoding <= Encodings.encodingMax && createFns[encoding])
       return (createFns[encoding])(reader);
     return 0;
 */
-    switch(encoding) {
-    case Encodings.encodingRaw:     return new RawDecoder(reader);
-    case Encodings.encodingRRE:     return new RREDecoder(reader);
-    case Encodings.encodingHextile: return new HextileDecoder(reader);
-    case Encodings.encodingTight:   return new TightDecoder(reader, c);
-    case Encodings.encodingZRLE:    return new ZRLEDecoder(reader);
+        switch (encoding) {
+            case Encodings.encodingRaw:
+                return new RawDecoder(reader);
+            case Encodings.encodingRRE:
+                return new RREDecoder(reader);
+            case Encodings.encodingHextile:
+                return new HextileDecoder(reader);
+            case Encodings.encodingTight:
+                return new TightDecoder(reader, c);
+            case Encodings.encodingZRLE:
+                return new ZRLEDecoder(reader);
+        }
+        return null;
     }
-    return null;
-  }
 }

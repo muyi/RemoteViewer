@@ -20,34 +20,47 @@ package com.iiordanov.tigervnc.rfb;
 
 public class LogWriter {
 
-  public LogWriter(String name_) {
-    name = name_;
-    level = globalLogLevel;
-    next = log_writers;
-    log_writers = this;
-  }
-
-  public void setLevel(int level_) { level = level_; }
-
-  public void write(int level, String str) {
-    if (level <= this.level) {
-      System.err.println(name+": "+str);
+    public LogWriter(String name_) {
+        name = name_;
+        level = globalLogLevel;
+        next = log_writers;
+        log_writers = this;
     }
-  }
 
-  public void error(String str) { write(0, str); }
-  public void status(String str) { write(10, str); }
-  public void info(String str) { write(30, str); }
-  public void debug(String str) { write(100, str); }
-
-  public static boolean setLogParams(String params) {
-    globalLogLevel = Integer.parseInt(params);
-    LogWriter current = log_writers;
-    while (current != null) {
-      current.setLevel(globalLogLevel);
-      current = current.next;
+    public void setLevel(int level_) {
+        level = level_;
     }
-    return true;
+
+    public void write(int level, String str) {
+        if (level <= this.level) {
+            System.err.println(name + ": " + str);
+        }
+    }
+
+    public void error(String str) {
+        write(0, str);
+    }
+
+    public void status(String str) {
+        write(10, str);
+    }
+
+    public void info(String str) {
+        write(30, str);
+    }
+
+    public void debug(String str) {
+        write(100, str);
+    }
+
+    public static boolean setLogParams(String params) {
+        globalLogLevel = Integer.parseInt(params);
+        LogWriter current = log_writers;
+        while (current != null) {
+            current.setLevel(globalLogLevel);
+            current = current.next;
+        }
+        return true;
 //      int colon = params.indexOf(':');
 //      String logwriter_name = params.substring(0, colon);
 //      params = params.substring(colon+1);
@@ -79,21 +92,21 @@ public class LogWriter {
 //      //logwriter.setLog(logger);
 //      logwriter.setLevel(level);
 //      return true;
-  }
-
-
-  static LogWriter getLogWriter(String name) {
-    LogWriter current = log_writers;
-    while (current != null) {
-      if (name.equalsIgnoreCase(current.name)) return current;
-      current = current.next;
     }
-    return null;
-  }
 
-  String name;
-  int level;
-  LogWriter next;
-  static LogWriter log_writers;
-  static int globalLogLevel = 30;
+
+    static LogWriter getLogWriter(String name) {
+        LogWriter current = log_writers;
+        while (current != null) {
+            if (name.equalsIgnoreCase(current.name)) return current;
+            current = current.next;
+        }
+        return null;
+    }
+
+    String name;
+    int level;
+    LogWriter next;
+    static LogWriter log_writers;
+    static int globalLogLevel = 30;
 }

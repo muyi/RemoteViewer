@@ -19,20 +19,23 @@
 package com.iiordanov.tigervnc.rfb;
 
 public class ManagedPixelBuffer extends PixelBuffer {
-  public void setSize(int w, int h) {
-    width_ = w;
-    height_ = h;
-    checkDataSize();
-  }
-  public void setPF(PixelFormat pf) {
-    super.setPF(pf);
-    checkDataSize();
-  }
+    public void setSize(int w, int h) {
+        width_ = w;
+        height_ = h;
+        checkDataSize();
+    }
 
-  public int dataLen() { return area(); }
+    public void setPF(PixelFormat pf) {
+        super.setPF(pf);
+        checkDataSize();
+    }
 
-  final void checkDataSize() {
-    if (data == null || data.length < dataLen())
-      data = new int[dataLen()];
-  }
+    public int dataLen() {
+        return area();
+    }
+
+    final void checkDataSize() {
+        if (data == null || data.length < dataLen())
+            data = new int[dataLen()];
+    }
 }

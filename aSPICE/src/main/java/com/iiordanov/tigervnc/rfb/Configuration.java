@@ -24,58 +24,58 @@ package com.iiordanov.tigervnc.rfb;
 
 public class Configuration {
 
-  // - Set named parameter to value
-  public static boolean setParam(String name, String value) {
-    VoidParameter param = getParam(name);
-    if (param == null) return false;
-    return param.setParam(value);
-  }
-
-  // - Set parameter to value (separated by "=")
-  public static boolean setParam(String config) {
-    boolean hyphen = false;
-    if (config.charAt(0) == '-') {
-      hyphen = true;
-      if (config.charAt(1) == '-')
-        config = config.substring(2); // allow gnu-style --<option>
-      else
-        config = config.substring(1);
-    }
-    int equal = config.indexOf('=');
-    if (equal != -1) {
-      return setParam(config.substring(0, equal), config.substring(equal+1));
-    } else if (hyphen) {
-      VoidParameter param = getParam(config);
-      if (param == null) return false;
-      return param.setParam();
-    }
-    return false;
-  }
-
-  // - Get named parameter
-  public static VoidParameter getParam(String name) {
-    VoidParameter current = head;
-    while (current != null) {
-      if (name.equalsIgnoreCase(current.getName()))
-        return current;
-      current = current.next;
-    }
-    return null;
-  }
-
-  public static String listParams() {
-    StringBuffer s = new StringBuffer();
-
-    VoidParameter current = head;
-    while (current != null) {
-      String def_str = current.getDefaultStr();
-      String desc = current.getDescription();
-      s.append("  "+current.getName()+" - "+desc+" (default="+def_str+")\n");
-      current = current.next;
+    // - Set named parameter to value
+    public static boolean setParam(String name, String value) {
+        VoidParameter param = getParam(name);
+        if (param == null) return false;
+        return param.setParam(value);
     }
 
-    return s.toString();
-  }
+    // - Set parameter to value (separated by "=")
+    public static boolean setParam(String config) {
+        boolean hyphen = false;
+        if (config.charAt(0) == '-') {
+            hyphen = true;
+            if (config.charAt(1) == '-')
+                config = config.substring(2); // allow gnu-style --<option>
+            else
+                config = config.substring(1);
+        }
+        int equal = config.indexOf('=');
+        if (equal != -1) {
+            return setParam(config.substring(0, equal), config.substring(equal + 1));
+        } else if (hyphen) {
+            VoidParameter param = getParam(config);
+            if (param == null) return false;
+            return param.setParam();
+        }
+        return false;
+    }
+
+    // - Get named parameter
+    public static VoidParameter getParam(String name) {
+        VoidParameter current = head;
+        while (current != null) {
+            if (name.equalsIgnoreCase(current.getName()))
+                return current;
+            current = current.next;
+        }
+        return null;
+    }
+
+    public static String listParams() {
+        StringBuffer s = new StringBuffer();
+
+        VoidParameter current = head;
+        while (current != null) {
+            String def_str = current.getDefaultStr();
+            String desc = current.getDescription();
+            s.append("  " + current.getName() + " - " + desc + " (default=" + def_str + ")\n");
+            current = current.next;
+        }
+
+        return s.toString();
+    }
 
 /*
   public static void readAppletParams(java.applet.Applet applet) {
@@ -88,6 +88,6 @@ public class Configuration {
     }
   }
 */
-  
-  public static VoidParameter head;
+
+    public static VoidParameter head;
 }

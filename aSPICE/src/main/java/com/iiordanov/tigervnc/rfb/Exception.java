@@ -19,5 +19,7 @@
 package com.iiordanov.tigervnc.rfb;
 
 public class Exception extends com.iiordanov.tigervnc.rdr.Exception {
-  public Exception(String s) { super(s); }
+    public Exception(String s) {
+        super(s);
+    }
 }

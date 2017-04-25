@@ -1,9 +1,5 @@
 package com.iiordanov.aSPICE;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +9,7 @@ import android.graphics.Bitmap;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
@@ -21,7 +18,11 @@ import com.freerdp.freerdpcore.services.LibFreeRDP.UIEventListener;
 import com.iiordanov.aSPICE.input.RemoteKeyboard;
 import com.iiordanov.aSPICE.input.RemoteSpicePointer;
 
-import org.freedesktop.gstreamer.*;
+import org.freedesktop.gstreamer.GStreamer;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class SpiceCommunicator implements RfbConnectable {
     private final static String TAG = "SpiceCommunicator";
@@ -136,7 +137,7 @@ public class SpiceCommunicator implements RfbConnectable {
 
         public void run() {
             SpiceClientConnect(ip, port, tport, password, cf, cs, sound);
-            android.util.Log.e(TAG, "SpiceClientConnect returned.");
+            Log.e(TAG, "SpiceClientConnect returned.");
 
             // If we've exited SpiceClientConnect, the connection was
             // interrupted or was never established.
@@ -146,12 +147,14 @@ public class SpiceCommunicator implements RfbConnectable {
         }
     }
 
+    //yxlei 发送鼠标事件
     public void sendMouseEvent(int x, int y, int metaState, int pointerMask) {
         SpiceButtonEvent(x, y, metaState, pointerMask);
     }
 
+    //yxlei 发送键盘事件
     public void sendKeyEvent(boolean keyDown, int scanCode) {
-        android.util.Log.e(TAG, "Sending scanCode: " + scanCode + ". Is it down: " + keyDown);
+        Log.d(TAG, "Sending scanCode: " + scanCode + ". Is it down: " + keyDown);
         SpiceKeyEvent(keyDown, scanCode);
     }
     
@@ -161,7 +164,7 @@ public class SpiceCommunicator implements RfbConnectable {
     public static int openUsbDevice(int vid, int pid) throws InterruptedException {
         Log.i(TAG, "Attempting to open a USB device and return a file descriptor.");
 
-        if (Utils.isFree(myself.context) || !myself.usbEnabled || android.os.Build.VERSION.SDK_INT < 12) {
+        if (Utils.isFree(myself.context) || !myself.usbEnabled || Build.VERSION.SDK_INT < 12) {
             return -1;
         }
 
@@ -221,24 +224,27 @@ public class SpiceCommunicator implements RfbConnectable {
         return fd;
     }
 
+    /* Callbacks from jni */
     private static void OnSettingsChanged(int inst, int width, int height, int bpp) {
         if (uiEventListener != null)
             uiEventListener.OnSettingsChanged(width, height, bpp);
     }
 
+    /* Callbacks from jni */
     private static boolean OnAuthenticate(int inst, StringBuilder username, StringBuilder domain, StringBuilder password) {
         if (uiEventListener != null)
             return uiEventListener.OnAuthenticate(username, domain, password);
         return false;
     }
 
+    /* Callbacks from jni */
     private static void OnGraphicsUpdate(int inst, int x, int y, int width, int height) {
         if (uiEventListener != null)
             uiEventListener.OnGraphicsUpdate(x, y, width, height);
     }
 
     private static void OnGraphicsResize(int inst, int width, int height, int bpp) {
-        android.util.Log.e("Connector", "onGraphicsResize, width: " + width + " height: " + height);
+        Log.e("Connector", "onGraphicsResize, width: " + width + " height: " + height);
         if (uiEventListener != null)
             uiEventListener.OnGraphicsResize(width, height, bpp);
     }
@@ -298,11 +304,14 @@ public class SpiceCommunicator implements RfbConnectable {
     @Override
     public void writePointerEvent(int x, int y, int metaState, int pointerMask) {
         this.metaState = metaState;
-        if ((pointerMask & RemoteSpicePointer.PTRFLAGS_DOWN) != 0)
+        if ((pointerMask & RemoteSpicePointer.PTRFLAGS_DOWN) != 0) {
             sendModifierKeys(true, 0);
+        }
         sendMouseEvent(x, y, metaState, pointerMask);
-        if ((pointerMask & RemoteSpicePointer.PTRFLAGS_DOWN) == 0)
+        if ((pointerMask & RemoteSpicePointer.PTRFLAGS_DOWN) == 0) {
             sendModifierKeys(false, 0);
+        }
+
     }
 
     private void sendModifierKeys(boolean keyDown, int key) {
@@ -400,6 +409,7 @@ public class SpiceCommunicator implements RfbConnectable {
 
     @Override
     public void requestResolution(int x, int y) {
+        Log.e(TAG,"requestResolution="+x+"x"+y);
         SpiceRequestResolution(x, y);
     }
 }

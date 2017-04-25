@@ -1,23 +1,15 @@
 package com.iiordanov.aSPICE;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import net.sqlcipher.database.SQLiteDatabase;
-
-import com.iiordanov.aSPICE.dialogs.IntroTextDialog;
-import com.iiordanov.aSPICE.dialogs.GetTextFragment;
-import com.iiordanov.pubkeygenerator.GeneratePubkeyActivity;
-
 import android.app.Activity;
 import android.app.ActivityManager.MemoryInfo;
-import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -31,7 +23,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import android.content.res.Configuration;
+import com.iiordanov.aSPICE.dialogs.GetTextFragment;
+import com.iiordanov.aSPICE.dialogs.IntroTextDialog;
+import com.iiordanov.pubkeygenerator.GeneratePubkeyActivity;
+
+import net.sqlcipher.database.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public abstract class MainConfiguration extends FragmentActivity implements GetTextFragment.OnFragmentDismissedListener {
     private final static String TAG = "MainConfiguration";
@@ -286,7 +285,7 @@ public abstract class MainConfiguration extends FragmentActivity implements GetT
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.androidvncmenu, menu);
+        getMenuInflater().inflate(R.menu.androidspicemenu, menu);
         return true;
     }
 
@@ -297,19 +296,19 @@ public abstract class MainConfiguration extends FragmentActivity implements GetT
     public boolean onMenuOpened(int featureId, Menu menu) {
         if (menu != null) {
             menu.findItem(R.id.itemDeleteConnection).setEnabled(selected != null && !selected.isNew());
-            menu.findItem(R.id.itemSaveAsCopy).setEnabled(selected != null && !selected.isNew());
+//            menu.findItem(R.id.itemSaveAsCopy).setEnabled(selected != null && !selected.isNew());
             MenuItem itemMasterPassword = menu.findItem(R.id.itemMasterPassword);
             itemMasterPassword.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.masterPasswordEnabledTag));
             MenuItem keepScreenOn = menu.findItem(R.id.itemKeepScreenOn);
             keepScreenOn.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.keepScreenOnTag));
-            MenuItem disableImmersive = menu.findItem(R.id.itemDisableImmersive);
-            disableImmersive.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.disableImmersiveTag));
-            MenuItem forceLandscape = menu.findItem(R.id.itemForceLandscape);
-            forceLandscape.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.forceLandscapeTag));
-            MenuItem rAltAsIsoL3Shift = menu.findItem(R.id.itemRAltAsIsoL3Shift);
-            rAltAsIsoL3Shift.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.rAltAsIsoL3ShiftTag));
-            MenuItem itemLeftHandedMode = menu.findItem(R.id.itemLeftHandedMode);
-            itemLeftHandedMode.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.leftHandedModeTag));
+//            MenuItem disableImmersive = menu.findItem(R.id.itemDisableImmersive);
+//            disableImmersive.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.disableImmersiveTag));
+//            MenuItem forceLandscape = menu.findItem(R.id.itemForceLandscape);
+//            forceLandscape.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.forceLandscapeTag));
+//            MenuItem rAltAsIsoL3Shift = menu.findItem(R.id.itemRAltAsIsoL3Shift);
+//            rAltAsIsoL3Shift.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.rAltAsIsoL3ShiftTag));
+//            MenuItem itemLeftHandedMode = menu.findItem(R.id.itemLeftHandedMode);
+//            itemLeftHandedMode.setChecked(Utils.querySharedPreferenceBoolean(this, Constants.leftHandedModeTag));
         }
         return true;
     }
@@ -320,14 +319,14 @@ public abstract class MainConfiguration extends FragmentActivity implements GetT
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.itemSaveAsCopy:
-                if (selected.getNickname().equals(textNickname.getText().toString()))
-                    textNickname.setText("Copy of " + selected.getNickname());
-                updateSelectedFromView();
-                selected.set_Id(0);
-                selected.saveAndWriteRecent(false, database);
-                arriveOnPage();
-                break;
+//            case R.id.itemSaveAsCopy:
+//                if (selected.getNickname().equals(textNickname.getText().toString()))
+//                    textNickname.setText("Copy of " + selected.getNickname());
+//                updateSelectedFromView();
+//                selected.set_Id(0);
+//                selected.saveAndWriteRecent(false, database);
+//                arriveOnPage();
+//                break;
             case R.id.itemDeleteConnection:
                 Utils.showYesNoPrompt(this, "Delete?", "Delete " + selected.getNickname() + "?",
                         new DialogInterface.OnClickListener() {
@@ -342,9 +341,9 @@ public abstract class MainConfiguration extends FragmentActivity implements GetT
             case R.id.itemMainScreenHelp:
                 showDialog(R.id.itemMainScreenHelp);
                 break;
-            case R.id.itemExportImport:
-                showDialog(R.layout.importexport);
-                break;
+//            case R.id.itemExportImport:
+//                showDialog(R.layout.importexport);
+//                break;
             case R.id.itemMasterPassword:
                 if (Utils.isFree(this)) {
                     IntroTextDialog.showIntroTextIfNecessary(this, database, true);
@@ -360,18 +359,18 @@ public abstract class MainConfiguration extends FragmentActivity implements GetT
             case R.id.itemKeepScreenOn:
                 Utils.toggleSharedPreferenceBoolean(this, Constants.keepScreenOnTag);
                 break;
-            case R.id.itemDisableImmersive:
-                Utils.toggleSharedPreferenceBoolean(this, Constants.disableImmersiveTag);
-                break;
-            case R.id.itemForceLandscape:
-                Utils.toggleSharedPreferenceBoolean(this, Constants.forceLandscapeTag);
-                break;
-            case R.id.itemRAltAsIsoL3Shift:
-                Utils.toggleSharedPreferenceBoolean(this, Constants.rAltAsIsoL3ShiftTag);
-                break;
-            case R.id.itemLeftHandedMode:
-                Utils.toggleSharedPreferenceBoolean(this, Constants.leftHandedModeTag);
-                break;
+//            case R.id.itemDisableImmersive:
+//                Utils.toggleSharedPreferenceBoolean(this, Constants.disableImmersiveTag);
+//                break;
+//            case R.id.itemForceLandscape:
+//                Utils.toggleSharedPreferenceBoolean(this, Constants.forceLandscapeTag);
+//                break;
+//            case R.id.itemRAltAsIsoL3Shift:
+//                Utils.toggleSharedPreferenceBoolean(this, Constants.rAltAsIsoL3ShiftTag);
+//                break;
+//            case R.id.itemLeftHandedMode:
+//                Utils.toggleSharedPreferenceBoolean(this, Constants.leftHandedModeTag);
+//                break;
         }
         return true;
     }
@@ -474,7 +473,7 @@ public abstract class MainConfiguration extends FragmentActivity implements GetT
             FragmentTransaction tx = this.getSupportFragmentManager().beginTransaction();
             tx.remove(getPassword);
             tx.commit();
-           this. getSupportFragmentManager().executePendingTransactions();
+            this.getSupportFragmentManager().executePendingTransactions();
         }
         if (getNewPassword.isAdded()) {
             FragmentTransaction tx = this.getSupportFragmentManager().beginTransaction();

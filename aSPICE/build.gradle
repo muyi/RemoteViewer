@@ -11,7 +11,6 @@ android {
         versionName "1.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
     buildTypes {
@@ -29,7 +28,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(':PubkeyGenerator')
-    compile project(':ZoomerWithKeys')
-    compile project(':FreeRDPCore')
+//    compile project(':ZoomerWithKeys')
+//    compile project(':FreeRDPCore')
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
 }

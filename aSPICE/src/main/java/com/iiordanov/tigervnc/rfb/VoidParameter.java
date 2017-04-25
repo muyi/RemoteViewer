@@ -19,23 +19,36 @@
 package com.iiordanov.tigervnc.rfb;
 
 abstract public class VoidParameter {
-  public VoidParameter(String name_, String desc_) {
-    name = name_;
-    description = desc_;
-    next = Configuration.head;
-    Configuration.head = this;
-  }
+    public VoidParameter(String name_, String desc_) {
+        name = name_;
+        description = desc_;
+        next = Configuration.head;
+        Configuration.head = this;
+    }
 
-  final public String getName() { return name; }
-  final public String getDescription() { return description; }
+    final public String getName() {
+        return name;
+    }
 
-  abstract public boolean setParam(String value);
-  public boolean setParam() { return false; }
-  abstract public String getDefaultStr();
-  abstract public String getValueStr();
-  public boolean isBool() { return false; }
+    final public String getDescription() {
+        return description;
+    }
 
-  VoidParameter next;
-  protected String name;
-  protected String description;
+    abstract public boolean setParam(String value);
+
+    public boolean setParam() {
+        return false;
+    }
+
+    abstract public String getDefaultStr();
+
+    abstract public String getValueStr();
+
+    public boolean isBool() {
+        return false;
+    }
+
+    VoidParameter next;
+    protected String name;
+    protected String description;
 }

@@ -18,51 +18,53 @@
 
 package com.iiordanov.tigervnc.rfb;
 
-import com.iiordanov.tigervnc.rdr.*;
-import java.util.*;
+import com.iiordanov.tigervnc.rdr.OutStream;
+
+import java.util.Iterator;
 
 public class CMsgWriterV3 extends CMsgWriter {
 
-  public CMsgWriterV3(ConnParams cp_, OutStream os_) { super(cp_, os_); }
+    public CMsgWriterV3(ConnParams cp_, OutStream os_) {
+        super(cp_, os_);
+    }
 
-  public void writeClientInit(boolean shared) {
-    os.writeU8(shared?1:0);
-    endMsg();
-  }
+    public void writeClientInit(boolean shared) {
+        os.writeU8(shared ? 1 : 0);
+        endMsg();
+    }
 
-  public void startMsg(int type) {
-    os.writeU8(type);
-  }
+    public void startMsg(int type) {
+        os.writeU8(type);
+    }
 
-  public void endMsg() {
-    os.flush();
-  }
+    public void endMsg() {
+        os.flush();
+    }
 
-  public void writeSetDesktopSize(int width, int height,
-                                  ScreenSet layout)
-    {
-      if (!cp.supportsSetDesktopSize)
-        throw new Exception("Server does not support SetDesktopSize");
-    
-      startMsg(MsgTypes.msgTypeSetDesktopSize);
-      os.pad(1);
-    
-      os.writeU16(width);
-      os.writeU16(height);
-    
-      os.writeU8(layout.num_screens());
-      os.pad(1);
-    
-    for (Iterator iter = layout.screens.iterator(); iter.hasNext(); ) {
-      Screen refScreen = (Screen)iter.next();
-        os.writeU32(refScreen.id);
-        os.writeU16(refScreen.dimensions.tl.x);
-        os.writeU16(refScreen.dimensions.tl.y);
-        os.writeU16(refScreen.dimensions.width());
-        os.writeU16(refScreen.dimensions.height());
-        os.writeU32(refScreen.flags);
-      }
-    
-      endMsg();
+    public void writeSetDesktopSize(int width, int height,
+                                    ScreenSet layout) {
+        if (!cp.supportsSetDesktopSize)
+            throw new Exception("Server does not support SetDesktopSize");
+
+        startMsg(MsgTypes.msgTypeSetDesktopSize);
+        os.pad(1);
+
+        os.writeU16(width);
+        os.writeU16(height);
+
+        os.writeU8(layout.num_screens());
+        os.pad(1);
+
+        for (Iterator iter = layout.screens.iterator(); iter.hasNext(); ) {
+            Screen refScreen = (Screen) iter.next();
+            os.writeU32(refScreen.id);
+            os.writeU16(refScreen.dimensions.tl.x);
+            os.writeU16(refScreen.dimensions.tl.y);
+            os.writeU16(refScreen.dimensions.width());
+            os.writeU16(refScreen.dimensions.height());
+            os.writeU32(refScreen.flags);
+        }
+
+        endMsg();
     }
 }

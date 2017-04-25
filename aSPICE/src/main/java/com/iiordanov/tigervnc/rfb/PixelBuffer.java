@@ -25,96 +25,107 @@ package com.iiordanov.tigervnc.rfb;
 
 public class PixelBuffer {
 
-  public PixelBuffer() {
-    setPF(new PixelFormat());
-  }
-
-  public void setPF(PixelFormat pf) {
-    if (!(pf.bpp == 32) && !(pf.bpp == 16) && !(pf.bpp == 8))
-      throw new Exception("Internal error: bpp must be 8, 16, or 32 in PixelBuffer ("+pf.bpp+")");
-    format = pf;
-    switch (pf.depth) {
-    case  8:
-      //cm = new IndexColorModel(8, 256, new byte[256], new byte[256], new byte[256]);
-      //cm = new DirectColorModel(8, 7, (7 << 3), (3 << 6));
-        break;
-    case 16: 
-      //cm = new DirectColorModel(32, 0xF800, 0x07C0, 0x003E, (0xff << 24));
-           break;
-    case 24: 
-      //cm = new DirectColorModel(32, (0xff << 16), (0xff << 8), 0xff, (0xff << 24));
-        break;
-    case 32: 
-      //cm = new DirectColorModel(32, (0xff << pf.redShift), 
-      //  (0xff << pf.greenShift), (0xff << pf.blueShift), (0xff << 24));
-        break;
-    default:
-      throw new Exception("Unsupported color depth ("+pf.depth+")");
+    public PixelBuffer() {
+        setPF(new PixelFormat());
     }
-  }
-  public PixelFormat getPF() { return format; }
 
-  public final int width() { return width_; }
-  public final int height() { return height_; }
-  public final int area() { return width_ * height_; }
-
-  public void fillRect(int x, int y, int w, int h, int pix) {
-    for (int ry = y; ry < y + h; ry++)
-      for (int rx = x; rx < x + w; rx++)
-        data[ry * width_ + rx] = pix;
-  }
-
-  public void imageRect(int x, int y, int w, int h, int[] pix) {
-    for (int j = 0; j < h; j++)
-      System.arraycopy(pix, (w * j), data, width_ * (y + j) + x, w);
-  }
-
-  public void copyRect(int x, int y, int w, int h, int srcX, int srcY) {
-    int dest = (width_ * y) + x;
-    int src = (width_ * srcY) + srcX;
-    int inc = width_;
-
-    if (y > srcY) {
-      src += (h-1) * inc;
-      dest += (h-1) * inc;
-      inc = -inc;
+    public void setPF(PixelFormat pf) {
+        if (!(pf.bpp == 32) && !(pf.bpp == 16) && !(pf.bpp == 8))
+            throw new Exception("Internal error: bpp must be 8, 16, or 32 in PixelBuffer (" + pf.bpp + ")");
+        format = pf;
+        switch (pf.depth) {
+            case 8:
+                //cm = new IndexColorModel(8, 256, new byte[256], new byte[256], new byte[256]);
+                //cm = new DirectColorModel(8, 7, (7 << 3), (3 << 6));
+                break;
+            case 16:
+                //cm = new DirectColorModel(32, 0xF800, 0x07C0, 0x003E, (0xff << 24));
+                break;
+            case 24:
+                //cm = new DirectColorModel(32, (0xff << 16), (0xff << 8), 0xff, (0xff << 24));
+                break;
+            case 32:
+                //cm = new DirectColorModel(32, (0xff << pf.redShift),
+                //  (0xff << pf.greenShift), (0xff << pf.blueShift), (0xff << 24));
+                break;
+            default:
+                throw new Exception("Unsupported color depth (" + pf.depth + ")");
+        }
     }
-    int destEnd = dest + h * inc;
 
-    while (dest != destEnd) {
-      System.arraycopy(data, src, data, dest, w);
-      src += inc;
-      dest += inc;
+    public PixelFormat getPF() {
+        return format;
     }
-  }
 
-  public void maskRect(int x, int y, int w, int h, int[] pix, byte[] mask) {
-    int maskBytesPerRow = (w + 7) / 8;
-    
-    for (int j = 0; j < h; j++) {
-      int cy = y + j;
-      
-      if (cy < 0 || cy >= height_)
-        continue;
-
-      for (int i = 0; i < w; i++) {
-        int cx = x + i;
-
-        if (cx < 0 || cx >= width_)
-          continue;
-
-        int byte_ = j * maskBytesPerRow + i / 8;
-        int bit = 7 - i % 8;
-
-        if ((mask[byte_] & (1 << bit)) != 0)
-         data[cy * width_ + cx] = pix[j * w + i];
-      }     
+    public final int width() {
+        return width_;
     }
-  }
 
-  public int[] data;
-  //public ColorModel cm;
+    public final int height() {
+        return height_;
+    }
 
-  protected PixelFormat format;
-  protected int width_, height_;
+    public final int area() {
+        return width_ * height_;
+    }
+
+    public void fillRect(int x, int y, int w, int h, int pix) {
+        for (int ry = y; ry < y + h; ry++)
+            for (int rx = x; rx < x + w; rx++)
+                data[ry * width_ + rx] = pix;
+    }
+
+    public void imageRect(int x, int y, int w, int h, int[] pix) {
+        for (int j = 0; j < h; j++)
+            System.arraycopy(pix, (w * j), data, width_ * (y + j) + x, w);
+    }
+
+    public void copyRect(int x, int y, int w, int h, int srcX, int srcY) {
+        int dest = (width_ * y) + x;
+        int src = (width_ * srcY) + srcX;
+        int inc = width_;
+
+        if (y > srcY) {
+            src += (h - 1) * inc;
+            dest += (h - 1) * inc;
+            inc = -inc;
+        }
+        int destEnd = dest + h * inc;
+
+        while (dest != destEnd) {
+            System.arraycopy(data, src, data, dest, w);
+            src += inc;
+            dest += inc;
+        }
+    }
+
+    public void maskRect(int x, int y, int w, int h, int[] pix, byte[] mask) {
+        int maskBytesPerRow = (w + 7) / 8;
+
+        for (int j = 0; j < h; j++) {
+            int cy = y + j;
+
+            if (cy < 0 || cy >= height_)
+                continue;
+
+            for (int i = 0; i < w; i++) {
+                int cx = x + i;
+
+                if (cx < 0 || cx >= width_)
+                    continue;
+
+                int byte_ = j * maskBytesPerRow + i / 8;
+                int bit = 7 - i % 8;
+
+                if ((mask[byte_] & (1 << bit)) != 0)
+                    data[cy * width_ + cx] = pix[j * w + i];
+            }
+        }
+    }
+
+    public int[] data;
+    //public ColorModel cm;
+
+    protected PixelFormat format;
+    protected int width_, height_;
 }

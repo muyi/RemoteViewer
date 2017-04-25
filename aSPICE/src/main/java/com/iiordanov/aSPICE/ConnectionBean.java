@@ -20,16 +20,9 @@
 
 package com.iiordanov.aSPICE;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-
-import net.sqlcipher.database.SQLiteDatabase;
-
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView.ScaleType;
@@ -37,11 +30,16 @@ import android.widget.ImageView.ScaleType;
 import com.antlersoft.android.dbimpl.NewInstance;
 import com.iiordanov.aSPICE.input.TouchMouseSwipePanInputHandler;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * @author Iordan Iordanov
  * @author Michael A. MacDonald
  * @author David Warden
- *
  */
 public class ConnectionBean extends AbstractConnectionBean implements Comparable<ConnectionBean> {
 
@@ -103,8 +101,8 @@ public class ConnectionBean extends AbstractConnectionBean implements Comparable
         setPrefEncoding(RfbProto.EncodingTight);
         setScaleMode(ScaleType.MATRIX);
         setInputMode(TouchMouseSwipePanInputHandler.TOUCH_ZOOM_MODE);
-        setUseDpadAsArrows(true);
-        setRotateDpad(false);
+//        setUseDpadAsArrows(true);
+//        setRotateDpad(false);
         setUsePortrait(false);
         setUseLocalCursor(false);
         setRepeaterId("");
@@ -577,6 +575,7 @@ public class ConnectionBean extends AbstractConnectionBean implements Comparable
     /**
      * Return the object representing the app global state in the database, or null
      * if the object hasn't been set up yet
+     *
      * @param db App's database -- only needs to be readable
      * @return Object representing the single persistent instance of MostRecentBean, which
      * is the app's global state

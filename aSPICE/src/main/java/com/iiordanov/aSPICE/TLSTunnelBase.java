@@ -20,66 +20,64 @@
 
 package com.iiordanov.aSPICE;
 
+import android.util.Log;
+
 import java.net.Socket;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import android.util.Log;
-
 public abstract class TLSTunnelBase {
 
-private static final String TAG = "TLSTunnelBase";
+    private static final String TAG = "TLSTunnelBase";
 
-public TLSTunnelBase (Socket sock_) {
-    sock = sock_;
-  }
+    public TLSTunnelBase(Socket sock_) {
+        sock = sock_;
+    }
 
-  protected void initContext (SSLContext sc) throws java.security.GeneralSecurityException {
-    sc.init (null, null, null);
-  }
+    protected void initContext(SSLContext sc) throws java.security.GeneralSecurityException {
+        sc.init(null, null, null);
+    }
 
-  public void setup (RfbProto cc) throws Exception {
-    try {
-      SSLSocketFactory sslfactory;
-      SSLSocket sslsock;
-      SSLContext sc = SSLContext.getInstance ("TLS");
-      Log.i(TAG, "Generating TLS context");
-      initContext (sc);
-      Log.i(TAG, "Doing TLS handshake");
-      sslfactory = sc.getSocketFactory ();
-      sslsock = (SSLSocket) sslfactory.createSocket (sock,
-						     sock.getInetAddress().
-						     getHostName(),
-						     sock.getPort(), true);
+    public void setup(RfbProto cc) throws Exception {
+        try {
+            SSLSocketFactory sslfactory;
+            SSLSocket sslsock;
+            SSLContext sc = SSLContext.getInstance("TLS");
+            Log.i(TAG, "Generating TLS context");
+            initContext(sc);
+            Log.i(TAG, "Doing TLS handshake");
+            sslfactory = sc.getSocketFactory();
+            sslsock = (SSLSocket) sslfactory.createSocket(sock,
+                    sock.getInetAddress().
+                            getHostName(),
+                    sock.getPort(), true);
 
-      sslsock.setTcpNoDelay(true);
-      sslsock.setSoTimeout(Constants.SOCKET_CONN_TIMEOUT);
+            sslsock.setTcpNoDelay(true);
+            sslsock.setSoTimeout(Constants.SOCKET_CONN_TIMEOUT);
 
-      setParam (sslsock);
+            setParam(sslsock);
 
-      sslsock.setSoTimeout(0);
+            sslsock.setSoTimeout(0);
 
       /* Not necessary - just ensures that we know what cipher
        * suite we are using for the output of toString()
        */
-      sslsock.startHandshake ();
+            sslsock.startHandshake();
 
-      Log.i(TAG, "TLS done");
-      
-      cc.setStreams (sslsock.getInputStream(), sslsock.getOutputStream());
-    }
-    catch (java.io.IOException e) {
-      throw new Exception("TLS handshake failed " + e.toString ());
-    }
-    catch (java.security.GeneralSecurityException e) {
-      throw new Exception("TLS handshake failed " + e.toString ());
-    }
-  }
+            Log.i(TAG, "TLS done");
 
-  protected abstract void setParam (SSLSocket sock) throws Exception;
+            cc.setStreams(sslsock.getInputStream(), sslsock.getOutputStream());
+        } catch (java.io.IOException e) {
+            throw new Exception("TLS handshake failed " + e.toString());
+        } catch (java.security.GeneralSecurityException e) {
+            throw new Exception("TLS handshake failed " + e.toString());
+        }
+    }
 
-  Socket sock;
+    protected abstract void setParam(SSLSocket sock) throws Exception;
+
+    Socket sock;
 
 }

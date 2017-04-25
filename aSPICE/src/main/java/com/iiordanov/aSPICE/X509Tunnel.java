@@ -21,124 +21,126 @@
 
 package com.iiordanov.aSPICE;
 
-import java.util.*;
-import java.net.*;
-import javax.net.ssl.*;
-
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 
-import java.security.*;
-import java.security.cert.*;
+import java.io.ByteArrayInputStream;
+import java.net.Socket;
+import java.security.PublicKey;
 import java.security.cert.Certificate;
-import java.io.*;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class X509Tunnel extends TLSTunnelBase {
 
-  private static final String TAG = "X509Tunnel";
-  Certificate cert;
-  RemoteCanvas canvas;
+    private static final String TAG = "X509Tunnel";
+    Certificate cert;
+    RemoteCanvas canvas;
 
-  public X509Tunnel (Socket sock_, String certstr, RemoteCanvas canvas) throws CertificateException {
-    super (sock_);
+    public X509Tunnel(Socket sock_, String certstr, RemoteCanvas canvas) throws CertificateException {
+        super(sock_);
 
-    Log.i(TAG, "X509Tunnel began.");
-    this.canvas = canvas;
-    if (certstr != null && !certstr.equals("")) {
-        CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-        ByteArrayInputStream in = new ByteArrayInputStream(Base64.decode(certstr, Base64.DEFAULT));
-        cert = (X509Certificate)certFactory.generateCertificate(in);
-    }
-    
-    Log.i(TAG, "X509Tunnel ended.");
-  }
+        Log.i(TAG, "X509Tunnel began.");
+        this.canvas = canvas;
+        if (certstr != null && !certstr.equals("")) {
+            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+            ByteArrayInputStream in = new ByteArrayInputStream(Base64.decode(certstr, Base64.DEFAULT));
+            cert = (X509Certificate) certFactory.generateCertificate(in);
+        }
 
-  protected void setParam (SSLSocket sock) {
-    String[] supported;
-    ArrayList<String> enabled = new ArrayList<String> ();
-
-    supported = sock.getSupportedCipherSuites ();
-
-    for (int i = 0; i < supported.length; i++) {
-      if (!supported[i].matches (".*DH_anon.*")) {
-        enabled.add (supported[i]);
-        Log.i(TAG, "Adding cipher: " + supported[i]);
-      }
+        Log.i(TAG, "X509Tunnel ended.");
     }
 
-    sock.setEnabledCipherSuites ((String[]) enabled.toArray (new String[0]));
-  }
+    protected void setParam(SSLSocket sock) {
+        String[] supported;
+        ArrayList<String> enabled = new ArrayList<String>();
 
-  protected void initContext (SSLContext sc) throws java.security.GeneralSecurityException {
-    TrustManager[] myTM;
+        supported = sock.getSupportedCipherSuites();
 
-    //if (cert != null) {
-      myTM = new TrustManager[] { new X509TrustManager () {
-        
-        public java.security.cert.X509Certificate[] getAcceptedIssuers ()
-        {
-          return null;
+        for (int i = 0; i < supported.length; i++) {
+            if (!supported[i].matches(".*DH_anon.*")) {
+                enabled.add(supported[i]);
+                Log.i(TAG, "Adding cipher: " + supported[i]);
+            }
         }
 
-        public void checkClientTrusted (
-            java.security.cert.X509Certificate[] certs, String authType)
-            throws CertificateException
-        {
-          throw new CertificateException ("no clients");
+        sock.setEnabledCipherSuites((String[]) enabled.toArray(new String[0]));
+    }
+
+    protected void initContext(SSLContext sc) throws java.security.GeneralSecurityException {
+        TrustManager[] myTM;
+
+        //if (cert != null) {
+        myTM = new TrustManager[]{new X509TrustManager() {
+
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(
+                    java.security.cert.X509Certificate[] certs, String authType)
+                    throws CertificateException {
+                throw new CertificateException("no clients");
+            }
+
+            public void checkServerTrusted(
+                    java.security.cert.X509Certificate[] certs, String authType)
+                    throws CertificateException {
+
+                if (certs == null || certs.length < 1) {
+                    throw new CertificateException("no certs");
+                }
+                if (certs == null || certs.length > 1) {
+                    throw new CertificateException("cert path too long");
+                }
+
+                boolean ca_match = false;
+
+                if (cert == null) {
+                    // Send a message containing the certificate to our handler.
+                    Message m = new Message();
+                    m.setTarget(canvas.handler);
+                    m.what = Constants.DIALOG_X509_CERT;
+                    m.obj = certs[0];
+                    canvas.handler.sendMessage(m);
+
+                    synchronized (canvas) {
+                        // Block indefinitely until the x509 cert is accepted.
+                        while (!canvas.isCertificateAccepted()) {
+                            try {
+                                canvas.wait();
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                    // We have exited the loop, thus the certificate was accepted.
+                    ca_match = true;
+                }
+
+                if (!ca_match) {
+                    try {
+                        PublicKey cakey = cert.getPublicKey();
+                        certs[0].verify(cakey);
+                        ca_match = true;
+                    } catch (Exception e) {
+                        ca_match = false;
+                    }
+                    if (!cert.equals(certs[0])) {
+                        throw new CertificateException("certificate does not match");
+                    }
+                }
+            }
         }
-
-        public void checkServerTrusted (
-            java.security.cert.X509Certificate[] certs, String authType)
-            throws CertificateException
-        {
-
-          if (certs == null || certs.length < 1)
-          {
-            throw new CertificateException ("no certs");
-          }
-          if (certs == null || certs.length > 1)
-          {
-            throw new CertificateException ("cert path too long");
-          }
-          
-          boolean ca_match = false;
-          
-          if (cert == null) {
-              // Send a message containing the certificate to our handler.
-              Message m = new Message();
-              m.setTarget(canvas.handler);
-              m.what = Constants.DIALOG_X509_CERT;
-              m.obj = certs[0];
-              canvas.handler.sendMessage(m);
-
-              synchronized (canvas) {
-                  // Block indefinitely until the x509 cert is accepted.
-                  while (!canvas.isCertificateAccepted()) {
-                      try {
-                          canvas.wait();
-                      } catch (InterruptedException e1) { e1.printStackTrace(); }
-                  }
-              }
-              // We have exited the loop, thus the certificate was accepted.
-              ca_match = true;
-          }
-
-          if (!ca_match) {
-              try {
-                PublicKey cakey = cert.getPublicKey ();
-                certs[0].verify (cakey);
-                ca_match = true;
-              } catch (Exception e) {
-                ca_match = false;
-              }
-              if (!cert.equals (certs[0])) {
-                  throw new CertificateException ("certificate does not match");
-              }
-          }
-        }
-       }
-      };
+        };
     /*  
     } else {
       TrustManagerFactory tmf = TrustManagerFactory.getInstance ("X509");
@@ -146,6 +148,6 @@ public class X509Tunnel extends TLSTunnelBase {
       tmf.init (ks);
       myTM = tmf.getTrustManagers();
     }*/
-    sc.init (null, myTM, null);
-  }
+        sc.init(null, myTM, null);
+    }
 }

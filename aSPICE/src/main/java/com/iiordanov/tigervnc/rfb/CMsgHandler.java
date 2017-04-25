@@ -26,68 +26,87 @@ import android.graphics.Bitmap;
 
 abstract public class CMsgHandler {
 
-  public CMsgHandler() {
-    cp = new ConnParams();
-  }
+    public CMsgHandler() {
+        cp = new ConnParams();
+    }
 
-  public void setDesktopSize(int width, int height) 
-  {
-    cp.width = width;
-    cp.height = height;
-  }
+    public void setDesktopSize(int width, int height) {
+        cp.width = width;
+        cp.height = height;
+    }
 
-  public void setExtendedDesktopSize(int reason, int result,
-                                     int width, int height,
-                                     ScreenSet layout) 
-  {
-    cp.supportsSetDesktopSize = true;
-    
-    if ((reason == screenTypes.reasonClient) && (result != screenTypes.resultSuccess))
-      return;
+    public void setExtendedDesktopSize(int reason, int result,
+                                       int width, int height,
+                                       ScreenSet layout) {
+        cp.supportsSetDesktopSize = true;
 
-    if (!layout.validate(width, height))
-      vlog.error("Server sent us an invalid screen layout");
+        if ((reason == screenTypes.reasonClient) && (result != screenTypes.resultSuccess))
+            return;
 
-    cp.width = width;
-    cp.height = height;
-    cp.screenLayout = layout;
-  }
+        if (!layout.validate(width, height))
+            vlog.error("Server sent us an invalid screen layout");
 
-  public void setPixelFormat(PixelFormat pf) 
-  {
-    cp.setPF(pf);
-  }
+        cp.width = width;
+        cp.height = height;
+        cp.screenLayout = layout;
+    }
 
-  public void setName(String name) 
-  {
-    cp.setName(name);
-  }
+    public void setPixelFormat(PixelFormat pf) {
+        cp.setPF(pf);
+    }
 
-  public void clientRedirect(int port, String host, 
-                             String x509subject) {}
+    public void setName(String name) {
+        cp.setName(name);
+    }
 
-  public void setCursor(int width, int height, Point hotspot,
-                        int[] data, byte[] mask) {}
-  public void serverInit() {}
+    public void clientRedirect(int port, String host,
+                               String x509subject) {
+    }
 
-  public void framebufferUpdateStart() {}
-  public void framebufferUpdateEnd() {}
-  public void beginRect(Rect r, int encoding) {}
-  public void endRect(Rect r, int encoding) {}
+    public void setCursor(int width, int height, Point hotspot,
+                          int[] data, byte[] mask) {
+    }
 
-  public void setColourMapEntries(int firstColour, int nColours, 
-    int[] rgbs) { }
-  public void bell() {}
-  public void serverCutText(String str, int len) {}
+    public void serverInit() {
+    }
 
-  public void fillRect(Rect r, int pix) {}
-  public void imageRect(Rect r, int[] pixels) {}
-  public void imageRect(Rect r, Bitmap b) {}
-  public void copyRect(Rect r, int srcX, int srcY) {}
+    public void framebufferUpdateStart() {
+    }
 
-  abstract public PixelFormat getPreferredPF();
+    public void framebufferUpdateEnd() {
+    }
 
-  public ConnParams cp;
+    public void beginRect(Rect r, int encoding) {
+    }
 
-  static LogWriter vlog = new LogWriter("CMsgHandler");
+    public void endRect(Rect r, int encoding) {
+    }
+
+    public void setColourMapEntries(int firstColour, int nColours,
+                                    int[] rgbs) {
+    }
+
+    public void bell() {
+    }
+
+    public void serverCutText(String str, int len) {
+    }
+
+    public void fillRect(Rect r, int pix) {
+    }
+
+    public void imageRect(Rect r, int[] pixels) {
+    }
+
+    public void imageRect(Rect r, Bitmap b) {
+    }
+
+    public void copyRect(Rect r, int srcX, int srcY) {
+    }
+
+    abstract public PixelFormat getPreferredPF();
+
+    public ConnParams cp;
+
+    static LogWriter vlog = new LogWriter("CMsgHandler");
 }

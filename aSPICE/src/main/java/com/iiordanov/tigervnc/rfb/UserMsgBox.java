@@ -23,5 +23,5 @@
 package com.iiordanov.tigervnc.rfb;
 
 public interface UserMsgBox {
-  public boolean showMsgBox(int flags,String title, String text);
+    public boolean showMsgBox(int flags, String title, String text);
 }

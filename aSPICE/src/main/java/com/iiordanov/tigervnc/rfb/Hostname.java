@@ -20,25 +20,25 @@ package com.iiordanov.tigervnc.rfb;
 
 public class Hostname {
 
-  public static String getHost(String vncServerName) {
-    int colonPos = vncServerName.indexOf(':');
-    if (colonPos == 0)
-      return "localhost";
-    if (colonPos == -1)
-      colonPos = vncServerName.length();
-    return vncServerName.substring(0, colonPos);
-  }
-
-  public static int getPort(String vncServerName) {
-    int colonPos = vncServerName.indexOf(':');
-    if (colonPos == -1 || colonPos == vncServerName.length()-1)
-      return 5900;
-    if (vncServerName.charAt(colonPos+1) == ':') {
-      return Integer.parseInt(vncServerName.substring(colonPos+2));
+    public static String getHost(String vncServerName) {
+        int colonPos = vncServerName.indexOf(':');
+        if (colonPos == 0)
+            return "localhost";
+        if (colonPos == -1)
+            colonPos = vncServerName.length();
+        return vncServerName.substring(0, colonPos);
     }
-    int port = Integer.parseInt(vncServerName.substring(colonPos+1));
-    if (port < 100)
-      port += 5900;
-    return port;
-  }
+
+    public static int getPort(String vncServerName) {
+        int colonPos = vncServerName.indexOf(':');
+        if (colonPos == -1 || colonPos == vncServerName.length() - 1)
+            return 5900;
+        if (vncServerName.charAt(colonPos + 1) == ':') {
+            return Integer.parseInt(vncServerName.substring(colonPos + 2));
+        }
+        int port = Integer.parseInt(vncServerName.substring(colonPos + 1));
+        if (port < 100)
+            port += 5900;
+        return port;
+    }
 }

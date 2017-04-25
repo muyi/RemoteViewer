@@ -23,22 +23,26 @@ package com.iiordanov.tigervnc.rfb;
 
 public class Screen {
 
-    public Screen() { id=0; flags=0; dimensions = new Rect(); }
+    public Screen() {
+        id = 0;
+        flags = 0;
+        dimensions = new Rect();
+    }
 
     public Screen(int id_, int x_, int y_, int w_, int h_, int flags_) {
-      id = id_;
-      dimensions = new Rect(x_, y_, x_+w_, y_+h_);
-      flags = flags_;
+        id = id_;
+        dimensions = new Rect(x_, y_, x_ + w_, y_ + h_);
+        flags = flags_;
     }
 
     public final boolean operator(Screen r) {
-      if (id != r.id)
-        return false;
-      if (!dimensions.equals(r.dimensions))
-        return false;
-      if (flags != r.flags)
-        return false;
-      return true;
+        if (id != r.id)
+            return false;
+        if (!dimensions.equals(r.dimensions))
+            return false;
+        if (flags != r.flags)
+            return false;
+        return true;
     }
 
     public int id;

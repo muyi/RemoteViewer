@@ -43,7 +43,7 @@ package com.iiordanov.android.bc;
  * {@code false} so that a subclass can retrieve the accumulated scale
  * factor in an overridden onScaleEnd.
  * {@link OnScaleGestureListener#onScaleBegin(ScaleGestureDetector)} returns
- * {@code true}. 
+ * {@code true}.
  */
 public class SimpleOnScaleGestureListener implements OnScaleGestureListener {
 

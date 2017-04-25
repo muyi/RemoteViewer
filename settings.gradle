@@ -1,1 +1,1 @@
-include ':PubkeyGenerator', ':ZoomerWithKeys', ':FreeRDPCore', ':aSPICE'
+include ':PubkeyGenerator', ':aSPICE'

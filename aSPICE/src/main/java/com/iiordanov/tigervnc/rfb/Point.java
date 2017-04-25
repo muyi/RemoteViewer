@@ -20,22 +20,46 @@ package com.iiordanov.tigervnc.rfb;
 
 public class Point {
 
-  // Point
-  //
-  // Represents a point in 2D space, by X and Y coordinates.
-  // Can also be used to represent a delta, or offset, between
-  // two Points.
-  // Functions are provided to allow Points to be compared for
-  // equality and translated by a supplied offset.
-  // Functions are also provided to negate offset Points.
+    // Point
+    //
+    // Represents a point in 2D space, by X and Y coordinates.
+    // Can also be used to represent a delta, or offset, between
+    // two Points.
+    // Functions are provided to allow Points to be compared for
+    // equality and translated by a supplied offset.
+    // Functions are also provided to negate offset Points.
 
-  public Point() {x=0; y=0;}
-  public Point(int x_, int y_) { x=x_; y=y_;}
-  public Point(float x_, float y_) { x=(int)x_; y=(int)y_;}
-  public final Point negate() {return new Point(-x, -y);}
-  public final boolean equals(Point p) {return (x==p.x && y==p.y);}
-  public final Point translate(Point p) {return new Point(x+p.x, y+p.y);}
-  public final Point subtract(Point p) {return new Point(x-p.x, y-p.y);}
-  public int x, y;
+    public Point() {
+        x = 0;
+        y = 0;
+    }
+
+    public Point(int x_, int y_) {
+        x = x_;
+        y = y_;
+    }
+
+    public Point(float x_, float y_) {
+        x = (int) x_;
+        y = (int) y_;
+    }
+
+    public final Point negate() {
+        return new Point(-x, -y);
+    }
+
+    public final boolean equals(Point p) {
+        return (x == p.x && y == p.y);
+    }
+
+    public final Point translate(Point p) {
+        return new Point(x + p.x, y + p.y);
+    }
+
+    public final Point subtract(Point p) {
+        return new Point(x - p.x, y - p.y);
+    }
+
+    public int x, y;
 
 }

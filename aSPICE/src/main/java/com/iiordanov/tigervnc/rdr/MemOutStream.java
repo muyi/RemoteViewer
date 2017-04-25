@@ -24,30 +24,43 @@ package com.iiordanov.tigervnc.rdr;
 
 public class MemOutStream extends OutStream {
 
-  public MemOutStream(int len) {
-    b = new byte[len];
-    ptr = 0;
-    end = len;
-  }
-  public MemOutStream() { this(1024); }
+    public MemOutStream(int len) {
+        b = new byte[len];
+        ptr = 0;
+        end = len;
+    }
 
-  public int length() { return ptr; }
-  public void clear() { ptr = 0; };
-  public void reposition(int pos) { ptr = pos; }
+    public MemOutStream() {
+        this(1024);
+    }
 
-  // overrun() either doubles the buffer or adds enough space for nItems of
-  // size itemSize bytes.
+    public int length() {
+        return ptr;
+    }
 
-  protected int overrun(int itemSize, int nItems) {
-    int len = ptr + itemSize * nItems;
-    if (len < end * 2)
-      len = end * 2;
+    public void clear() {
+        ptr = 0;
+    }
 
-    byte[] newBuf = new byte[len];
-    System.arraycopy(b, 0, newBuf, 0, ptr);
-    b = newBuf;
-    end = len;
+    ;
 
-    return nItems;
-  }
+    public void reposition(int pos) {
+        ptr = pos;
+    }
+
+    // overrun() either doubles the buffer or adds enough space for nItems of
+    // size itemSize bytes.
+
+    protected int overrun(int itemSize, int nItems) {
+        int len = ptr + itemSize * nItems;
+        if (len < end * 2)
+            len = end * 2;
+
+        byte[] newBuf = new byte[len];
+        System.arraycopy(b, 0, newBuf, 0, ptr);
+        b = newBuf;
+        end = len;
+
+        return nItems;
+    }
 }

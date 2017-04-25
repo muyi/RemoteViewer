@@ -18,49 +18,55 @@
 
 package com.iiordanov.tigervnc.rfb;
 
-import com.iiordanov.tigervnc.rdr.*;
-import com.iiordanov.tigervnc.vncviewer.*;
+import com.iiordanov.tigervnc.rdr.InStream;
+import com.iiordanov.tigervnc.rdr.OutStream;
+import com.iiordanov.tigervnc.vncviewer.CConn;
 
 public class CSecurityVncAuth extends CSecurity {
 
-  public CSecurityVncAuth() { }
-
-  private static final int vncAuthChallengeSize = 16;
-
-  public boolean processMsg(CConnection cc) 
-  {
-    InStream is = cc.getInStream();
-    OutStream os = cc.getOutStream();
-
-    // Read the challenge & obtain the user's password
-    byte[] challenge = new byte[vncAuthChallengeSize];
-    is.readBytes(challenge, 0, vncAuthChallengeSize);
-    StringBuffer passwd = new StringBuffer();
-    CConn.upg.getUserPasswd(null, passwd);
-
-    // Calculate the correct response
-    byte[] key = new byte[8];
-    int pwdLen = passwd.length();
-    byte[] utf8str = new byte[pwdLen];
-    try {
-      utf8str = passwd.toString().getBytes("UTF8");
-    } catch(java.io.UnsupportedEncodingException e) {
-      e.printStackTrace();
+    public CSecurityVncAuth() {
     }
-    for (int i=0; i<8; i++)
-      key[i] = i<pwdLen ? utf8str[i] : 0;
-    DesCipher des = new DesCipher(key);
-    for (int j = 0; j < vncAuthChallengeSize; j += 8)
-      des.encrypt(challenge,j,challenge,j);
 
-    // Return the response to the server
-    os.writeBytes(challenge, 0, vncAuthChallengeSize);
-    os.flush();
-    return true;
-  }
+    private static final int vncAuthChallengeSize = 16;
 
-  public int getType() { return Security.secTypeVncAuth; }
-  public String description() { return "No Encryption"; }
+    public boolean processMsg(CConnection cc) {
+        InStream is = cc.getInStream();
+        OutStream os = cc.getOutStream();
 
-  static LogWriter vlog = new LogWriter("VncAuth");
+        // Read the challenge & obtain the user's password
+        byte[] challenge = new byte[vncAuthChallengeSize];
+        is.readBytes(challenge, 0, vncAuthChallengeSize);
+        StringBuffer passwd = new StringBuffer();
+        CConn.upg.getUserPasswd(null, passwd);
+
+        // Calculate the correct response
+        byte[] key = new byte[8];
+        int pwdLen = passwd.length();
+        byte[] utf8str = new byte[pwdLen];
+        try {
+            utf8str = passwd.toString().getBytes("UTF8");
+        } catch (java.io.UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < 8; i++)
+            key[i] = i < pwdLen ? utf8str[i] : 0;
+        DesCipher des = new DesCipher(key);
+        for (int j = 0; j < vncAuthChallengeSize; j += 8)
+            des.encrypt(challenge, j, challenge, j);
+
+        // Return the response to the server
+        os.writeBytes(challenge, 0, vncAuthChallengeSize);
+        os.flush();
+        return true;
+    }
+
+    public int getType() {
+        return Security.secTypeVncAuth;
+    }
+
+    public String description() {
+        return "No Encryption";
+    }
+
+    static LogWriter vlog = new LogWriter("VncAuth");
 }

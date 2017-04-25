@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2012 Iordan Iordanov
  * Copyright (C) 2009 Michael A. MacDonald
- * 
+ * <p>
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ * <p>
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
@@ -32,10 +32,10 @@ class CompactBitmapData extends AbstractBitmapData {
     static final int CAPACITY_MULTIPLIER = 7;
     boolean isSpice = false;
     Bitmap.Config cfg = Bitmap.Config.RGB_565;
-    
+
     class CompactBitmapDrawable extends AbstractBitmapDrawable {
-        
-        CompactBitmapDrawable()    {
+
+        CompactBitmapDrawable() {
             super(CompactBitmapData.this);
         }
 
@@ -49,22 +49,22 @@ class CompactBitmapData extends AbstractBitmapData {
                     canvas.drawBitmap(data.mbitmap, 0.0f, 0.0f, _defaultPaint);
                     canvas.drawBitmap(softCursor, cursorRect.left, cursorRect.top, _defaultPaint);
                 }
-            } catch (Throwable e) { }
+            } catch (Throwable e) {
+            }
         }
     }
-    
-    CompactBitmapData(RfbConnectable rfb, RemoteCanvas c, boolean trueColor)
-    {
-        super(rfb,c);
-        bitmapwidth=framebufferwidth;
-        bitmapheight=framebufferheight;
+
+    CompactBitmapData(RfbConnectable rfb, RemoteCanvas c, boolean trueColor) {
+        super(rfb, c);
+        bitmapwidth = framebufferwidth;
+        bitmapheight = framebufferheight;
         // To please createBitmap, we ensure the size it at least 1x1.
-        if (bitmapwidth  == 0) bitmapwidth  = 1;
+        if (bitmapwidth == 0) bitmapwidth = 1;
         if (bitmapheight == 0) bitmapheight = 1;
 
         if (trueColor)
             cfg = Bitmap.Config.ARGB_8888;
-        
+
         mbitmap = Bitmap.createBitmap(bitmapwidth, bitmapheight, cfg);
         mbitmap.setHasAlpha(false);
 
@@ -97,7 +97,7 @@ class CompactBitmapData extends AbstractBitmapData {
     @Override
     public void updateBitmap(int x, int y, int w, int h) {
         synchronized (mbitmap) {
-            mbitmap.setPixels(bitmapPixels, offset(x,y), bitmapwidth, x, y, w, h);
+            mbitmap.setPixels(bitmapPixels, offset(x, y), bitmapwidth, x, y, w, h);
         }
     }
 
@@ -119,7 +119,7 @@ class CompactBitmapData extends AbstractBitmapData {
         int srcOffset, dstOffset;
         int dstH = h;
         int dstW = w;
-        
+
         int startSrcY, endSrcY, dstY, deltaY;
         if (sy > dy) {
             startSrcY = sy;
@@ -137,7 +137,7 @@ class CompactBitmapData extends AbstractBitmapData {
             dstOffset = offset(dx, dstY);
             try {
                 synchronized (mbitmap) {
-                    mbitmap.getPixels(bitmapPixels, srcOffset, bitmapwidth, sx-xoffset, y-yoffset, dstW, 1);
+                    mbitmap.getPixels(bitmapPixels, srcOffset, bitmapwidth, sx - xoffset, y - yoffset, dstW, 1);
                 }
                 System.arraycopy(bitmapPixels, srcOffset, bitmapPixels, dstOffset, dstW);
             } catch (Exception e) {
@@ -171,24 +171,24 @@ class CompactBitmapData extends AbstractBitmapData {
      * @see com.iiordanov.bVNC.AbstractBitmapData#frameBufferSizeChanged(RfbProto)
      */
     @Override
-    public void frameBufferSizeChanged () {
-        framebufferwidth=rfb.framebufferWidth();
-        framebufferheight=rfb.framebufferHeight();
-        android.util.Log.i("CBM", "bitmapsize changed = ("+bitmapwidth+","+bitmapheight+")");
-        if ( bitmapwidth < framebufferwidth || bitmapheight < framebufferheight ) {
+    public void frameBufferSizeChanged() {
+        framebufferwidth = rfb.framebufferWidth();
+        framebufferheight = rfb.framebufferHeight();
+        android.util.Log.i("CBM", "bitmapsize changed = (" + bitmapwidth + "," + bitmapheight + ")");
+        if (bitmapwidth < framebufferwidth || bitmapheight < framebufferheight) {
             dispose();
             // Try to free up some memory.
             System.gc();
-            bitmapwidth  = framebufferwidth;
+            bitmapwidth = framebufferwidth;
             bitmapheight = framebufferheight;
             bitmapPixels = new int[bitmapwidth * bitmapheight];
-            mbitmap      = Bitmap.createBitmap(bitmapwidth, bitmapheight, cfg);
-            memGraphics  = new Canvas(mbitmap);
-            drawable     = createDrawable();
+            mbitmap = Bitmap.createBitmap(bitmapwidth, bitmapheight, cfg);
+            memGraphics = new Canvas(mbitmap);
+            drawable = createDrawable();
             drawable.startDrawing();
         }
     }
-    
+
     /* (non-Javadoc)
      * @see com.iiordanov.bVNC.AbstractBitmapData#syncScroll()
      */

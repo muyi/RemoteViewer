@@ -24,55 +24,54 @@ package com.iiordanov.tigervnc.rdr;
 
 public class JavaOutStream extends OutStream {
 
-  static final int defaultBufSize = 16384;
-  static final int minBulkSize = 1024;
+    static final int defaultBufSize = 16384;
+    static final int minBulkSize = 1024;
 
-  public JavaOutStream(java.io.OutputStream jos_, int bufSize_) {
-    jos = jos_;
-    bufSize = bufSize_;
-    b = new byte[bufSize];
-    ptr = offset = start = 0;
-    end = start + bufSize;
-  }
-
-  public JavaOutStream(java.io.OutputStream jos) { this(jos, defaultBufSize); }
-
-  public int length() 
-  { 
-    return offset + ptr - start; 
-  }
-
-  public void flush() 
-  {
-    int sentUpTo = start;
-    while (sentUpTo < ptr) {
-      try {
-        jos.write(b, sentUpTo, ptr - sentUpTo);
-        sentUpTo += ptr - sentUpTo;
-        offset += ptr - sentUpTo;
-      } catch (java.io.IOException e) {
-          e.printStackTrace();
-          throw new IOException(e);
-      }
+    public JavaOutStream(java.io.OutputStream jos_, int bufSize_) {
+        jos = jos_;
+        bufSize = bufSize_;
+        b = new byte[bufSize];
+        ptr = offset = start = 0;
+        end = start + bufSize;
     }
-    ptr = start;
-  }
 
-  protected int overrun(int itemSize, int nItems) 
-  {
-    if (itemSize > bufSize)
-      throw new Exception("JavaOutStream overrun: max itemSize exceeded");
+    public JavaOutStream(java.io.OutputStream jos) {
+        this(jos, defaultBufSize);
+    }
 
-    flush();
+    public int length() {
+        return offset + ptr - start;
+    }
 
-    if (itemSize * nItems > end - ptr)
-      nItems = (end - ptr) / itemSize;
+    public void flush() {
+        int sentUpTo = start;
+        while (sentUpTo < ptr) {
+            try {
+                jos.write(b, sentUpTo, ptr - sentUpTo);
+                sentUpTo += ptr - sentUpTo;
+                offset += ptr - sentUpTo;
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+                throw new IOException(e);
+            }
+        }
+        ptr = start;
+    }
 
-    return nItems;
-  }
+    protected int overrun(int itemSize, int nItems) {
+        if (itemSize > bufSize)
+            throw new Exception("JavaOutStream overrun: max itemSize exceeded");
 
-  private java.io.OutputStream jos;
-  private int start;
-  private int offset;
-  private int bufSize;
+        flush();
+
+        if (itemSize * nItems > end - ptr)
+            nItems = (end - ptr) / itemSize;
+
+        return nItems;
+    }
+
+    private java.io.OutputStream jos;
+    private int start;
+    private int offset;
+    private int bufSize;
 }

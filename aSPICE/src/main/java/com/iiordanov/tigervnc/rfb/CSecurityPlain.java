@@ -18,40 +18,45 @@
 
 package com.iiordanov.tigervnc.rfb;
 
-import com.iiordanov.tigervnc.rdr.*;
-import com.iiordanov.tigervnc.vncviewer.*;
+import com.iiordanov.tigervnc.rdr.OutStream;
+import com.iiordanov.tigervnc.vncviewer.CConn;
 
 public class CSecurityPlain extends CSecurity {
 
-  public CSecurityPlain() { }
-
-  public boolean processMsg(CConnection cc) 
-  {
-    OutStream os = cc.getOutStream();
-
-    StringBuffer username = new StringBuffer();
-    StringBuffer password = new StringBuffer();
-
-    CConn.upg.getUserPasswd(username, password);
-
-    // Return the response to the server
-    os.writeU32(username.length());
-    os.writeU32(password.length());
-    byte[] utf8str;
-    try {
-      utf8str = username.toString().getBytes("UTF8");
-      os.writeBytes(utf8str, 0, username.length());
-      utf8str = password.toString().getBytes("UTF8");
-      os.writeBytes(utf8str, 0, password.length());
-    } catch(java.io.UnsupportedEncodingException e) {
-      e.printStackTrace();
+    public CSecurityPlain() {
     }
-    os.flush();
-    return true;
-  }
 
-  public int getType() { return Security.secTypePlain; }
-  public String description() { return "ask for username and password"; }
+    public boolean processMsg(CConnection cc) {
+        OutStream os = cc.getOutStream();
 
-  static LogWriter vlog = new LogWriter("Plain");
+        StringBuffer username = new StringBuffer();
+        StringBuffer password = new StringBuffer();
+
+        CConn.upg.getUserPasswd(username, password);
+
+        // Return the response to the server
+        os.writeU32(username.length());
+        os.writeU32(password.length());
+        byte[] utf8str;
+        try {
+            utf8str = username.toString().getBytes("UTF8");
+            os.writeBytes(utf8str, 0, username.length());
+            utf8str = password.toString().getBytes("UTF8");
+            os.writeBytes(utf8str, 0, password.length());
+        } catch (java.io.UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        os.flush();
+        return true;
+    }
+
+    public int getType() {
+        return Security.secTypePlain;
+    }
+
+    public String description() {
+        return "ask for username and password";
+    }
+
+    static LogWriter vlog = new LogWriter("Plain");
 }

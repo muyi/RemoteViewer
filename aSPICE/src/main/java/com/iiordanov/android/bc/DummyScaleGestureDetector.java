@@ -39,8 +39,8 @@ import android.view.MotionEvent;
 
 /**
  * Implementation of scale gesture detector interface for devices without multi-touch support; does nothing
- * @author Michael A. MacDonald
  *
+ * @author Michael A. MacDonald
  */
 class DummyScaleGestureDetector implements IBCScaleGestureDetector {
 

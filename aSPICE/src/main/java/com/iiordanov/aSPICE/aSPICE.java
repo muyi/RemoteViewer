@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2012 Iordan Iordanov
- * 
+ * <p>
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ * <p>
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
@@ -18,13 +18,6 @@
  */
 
 package com.iiordanov.aSPICE;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -37,10 +30,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -48,10 +41,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.iiordanov.aSPICE.dialogs.ImportExportDialog;
-import com.iiordanov.aSPICE.dialogs.ImportTlsCaDialog;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * aSPICE is the Activity for setting up SPICE connections.
@@ -72,8 +68,8 @@ public class aSPICE extends MainConfiguration {
     private EditText sshPassphrase;
     private EditText ipText;
     private EditText portText;
-    private Button buttonImportCa;
-    private EditText tlsPort;
+//    private Button buttonImportCa;
+//    private EditText tlsPort;
     private EditText passwordText;
     private Button goButton;
     private ToggleButton toggleAdvancedSettings;
@@ -82,19 +78,19 @@ public class aSPICE extends MainConfiguration {
     private EditText resWidth;
     private EditText resHeight;
     private CheckBox checkboxKeepPassword;
-    private CheckBox checkboxUseDpadAsArrows;
-    private CheckBox checkboxRotateDpad;
+ //   private CheckBox checkboxUseDpadAsArrows;
+//    private CheckBox checkboxRotateDpad;
     private CheckBox checkboxLocalCursor;
     private CheckBox checkboxUseSshPubkey;
     private CheckBox checkboxEnableSound;
-    private Spinner layoutMapSpinner = null;
-    private List<String> spinnerArray = null;
+//    private Spinner layoutMapSpinner = null;
+//    private List<String> spinnerArray = null;
 
     @Override
     public void onCreate(Bundle icicle) {
         layoutID = R.layout.main_spice;
         super.onCreate(icicle);
-        
+
         ipText = (EditText) findViewById(R.id.textIP);
         sshServer = (EditText) findViewById(R.id.sshServer);
         sshPort = (EditText) findViewById(R.id.sshPort);
@@ -106,23 +102,23 @@ public class aSPICE extends MainConfiguration {
         layoutUseSshPubkey = (LinearLayout) findViewById(R.id.layoutUseSshPubkey);
         sshServerEntry = (LinearLayout) findViewById(R.id.sshServerEntry);
         portText = (EditText) findViewById(R.id.textPORT);
-        tlsPort = (EditText) findViewById(R.id.tlsPort);
+//        tlsPort = (EditText) findViewById(R.id.tlsPort);
         passwordText = (EditText) findViewById(R.id.textPASSWORD);
         textNickname = (EditText) findViewById(R.id.textNickname);
-        
-        buttonImportCa = (Button) findViewById(R.id.buttonImportCa);
-        buttonImportCa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                aSPICE.this.updateSelectedFromView();
-                showDialog(R.layout.import_tls_ca_dialog);
-            }
-        });
-        
+
+//        buttonImportCa = (Button) findViewById(R.id.buttonImportCa);
+//        buttonImportCa.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                aSPICE.this.updateSelectedFromView();
+//                showDialog(R.layout.import_tls_ca_dialog);
+//            }
+//        });
+
         // Here we say what happens when the Pubkey Checkbox is
         // checked/unchecked.
         checkboxUseSshPubkey = (CheckBox) findViewById(R.id.checkboxUseSshPubkey);
-        
+
         // Define what happens when somebody selects different VNC connection
         // types.
         connectionType = (Spinner) findViewById(R.id.connectionType);
@@ -130,8 +126,8 @@ public class aSPICE extends MainConfiguration {
                 .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> ad, View view,
-                            int itemIndex, long id) {
-                        
+                                               int itemIndex, long id) {
+
                         selectedConnType = itemIndex;
                         if (selectedConnType == Constants.CONN_TYPE_PLAIN) {
                             setVisibilityOfSshWidgets(View.GONE);
@@ -148,17 +144,17 @@ public class aSPICE extends MainConfiguration {
                 });
 
         checkboxKeepPassword = (CheckBox) findViewById(R.id.checkboxKeepPassword);
-        checkboxUseDpadAsArrows = (CheckBox) findViewById(R.id.checkboxUseDpadAsArrows);
-        checkboxRotateDpad = (CheckBox) findViewById(R.id.checkboxRotateDpad);
+//        checkboxUseDpadAsArrows = (CheckBox) findViewById(R.id.checkboxUseDpadAsArrows);
+//        checkboxRotateDpad = (CheckBox) findViewById(R.id.checkboxRotateDpad);
         checkboxLocalCursor = (CheckBox) findViewById(R.id.checkboxUseLocalCursor);
         checkboxEnableSound = (CheckBox) findViewById(R.id.checkboxEnableSound);
-        
+
         goButton = (Button) findViewById(R.id.buttonGO);
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (ipText.getText().length() != 0
-                        && (portText.getText().length() != 0 || tlsPort.getText().length() != 0))
+                        && (portText.getText().length() != 0 ))
                     canvasStart();
                 else
                     Toast.makeText(view.getContext(),
@@ -171,54 +167,55 @@ public class aSPICE extends MainConfiguration {
         toggleAdvancedSettings = (ToggleButton) findViewById(R.id.toggleAdvancedSettings);
         layoutAdvancedSettings = (LinearLayout) findViewById(R.id.layoutAdvancedSettings);
         toggleAdvancedSettings.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton arg0,
-                            boolean checked) {
-                        if (checked)
-                            layoutAdvancedSettings.setVisibility(View.VISIBLE);
-                        else
-                            layoutAdvancedSettings.setVisibility(View.GONE);
-                    }
-                });
+            @Override
+            public void onCheckedChanged(CompoundButton arg0,
+                                         boolean checked) {
+                if (checked)
+                    layoutAdvancedSettings.setVisibility(View.VISIBLE);
+                else
+                    layoutAdvancedSettings.setVisibility(View.GONE);
+            }
+        });
 
         // The geometry type and dimensions boxes.
         spinnerGeometry = (Spinner) findViewById(R.id.spinnerRdpGeometry);
         resWidth = (EditText) findViewById(R.id.rdpWidth);
-        resHeight = (EditText) findViewById(R.id.rdpHeight);        
-        spinnerGeometry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener () {
+        resHeight = (EditText) findViewById(R.id.rdpHeight);
+        spinnerGeometry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View view, int itemIndex, long id) {
                 selected.setRdpResType(itemIndex);
-                setRemoteWidthAndHeight ();
+                setRemoteWidthAndHeight();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-        
+
         // Define what happens when the Import/Export button is pressed.
-        ((Button) findViewById(R.id.buttonImportExport))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        android.util.Log.e(TAG, "import/export!!");
-                        showDialog(R.layout.importexport);
-                    }
-                });
-        
+//        ((Button) findViewById(R.id.buttonImportExport))
+//                .setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        android.util.Log.e(TAG, "import/export!!");
+//                        showDialog(R.layout.importexport);
+//                    }
+//                });
+
         // Load list of items from asset folder and populate
-        try {
-            spinnerArray = listFiles("layouts");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        layoutMapSpinner = (Spinner) findViewById(R.id.layoutMaps);
+//        try {
+//            spinnerArray = listFiles("layouts");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+ //       layoutMapSpinner = (Spinner) findViewById(R.id.layoutMaps);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<String> adapter =  new ArrayAdapter<String> (this, android.R.layout.simple_spinner_item, spinnerArray);
+ //       ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
         // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        layoutMapSpinner.setAdapter(adapter);
+//        layoutMapSpinner.setAdapter(adapter);
     }
 
     /**
@@ -234,7 +231,7 @@ public class aSPICE extends MainConfiguration {
     /**
      * Enables and disables the EditText boxes for width and height of remote desktop.
      */
-    private void setRemoteWidthAndHeight () {
+    private void setRemoteWidthAndHeight() {
         if (selected.getRdpResType() != Constants.RDP_GEOM_SELECT_CUSTOM) {
             resWidth.setEnabled(false);
             resHeight.setEnabled(false);
@@ -243,7 +240,7 @@ public class aSPICE extends MainConfiguration {
             resHeight.setEnabled(true);
         }
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -252,12 +249,12 @@ public class aSPICE extends MainConfiguration {
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
-        case R.layout.importexport:
-            return new ImportExportDialog(this);
-        case R.id.itemMainScreenHelp:
-            return createHelpDialog();
-        case R.layout.import_tls_ca_dialog:
-            return new ImportTlsCaDialog(this, database);
+//            case R.layout.importexport:
+//                return new ImportExportDialog(this);
+            case R.id.itemMainScreenHelp:
+                return createHelpDialog();
+//            case R.layout.import_tls_ca_dialog:
+//                return new ImportTlsCaDialog(this, database);
         }
         return null;
     }
@@ -276,13 +273,13 @@ public class aSPICE extends MainConfiguration {
         Dialog d = adb.setView(new ListView(this)).create();
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(d.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.FILL_PARENT;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         d.show();
         d.getWindow().setAttributes(lp);
         return d;
     }
-    
+
     public void updateViewFromSelected() {
         if (selected == null)
             return;
@@ -305,27 +302,27 @@ public class aSPICE extends MainConfiguration {
         } else {
             portText.setText(Integer.toString(selected.getPort()));
         }
-        if (selected.getTlsPort() < 0) {
-            tlsPort.setText("");
-        } else {
-            tlsPort.setText(Integer.toString(selected.getTlsPort()));
-        }
+//        if (selected.getTlsPort() < 0) {
+//            tlsPort.setText("");
+//        } else {
+//            tlsPort.setText(Integer.toString(selected.getTlsPort()));
+//        }
 
         if (selected.getKeepPassword() || selected.getPassword().length() > 0) {
             passwordText.setText(selected.getPassword());
         }
 
         checkboxKeepPassword.setChecked(selected.getKeepPassword());
-        checkboxUseDpadAsArrows.setChecked(selected.getUseDpadAsArrows());
-        checkboxRotateDpad.setChecked(selected.getRotateDpad());
+//        checkboxUseDpadAsArrows.setChecked(selected.getUseDpadAsArrows());
+//        checkboxRotateDpad.setChecked(selected.getRotateDpad());
         checkboxLocalCursor.setChecked(selected.getUseLocalCursor());
         checkboxEnableSound.setChecked(selected.getEnableSound());
         textNickname.setText(selected.getNickname());
         spinnerGeometry.setSelection(selected.getRdpResType());
         resWidth.setText(Integer.toString(selected.getRdpWidth()));
         resHeight.setText(Integer.toString(selected.getRdpHeight()));
-        setRemoteWidthAndHeight ();
-        
+        setRemoteWidthAndHeight();
+
         // Write out CA to file if it doesn't exist.
         String caCertData = selected.getCaCert();
         try {
@@ -342,51 +339,53 @@ public class aSPICE extends MainConfiguration {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        
-        int selection = spinnerArray.indexOf(selected.getLayoutMap());
-        if (selection < 0) {
-            selection = spinnerArray.indexOf(Constants.DEFAULT_LAYOUT_MAP);
-        }
-        layoutMapSpinner.setSelection(selection);
+
+//        int selection = spinnerArray.indexOf(selected.getLayoutMap());
+//        if (selection < 0) {
+//            selection = spinnerArray.indexOf(Constants.DEFAULT_LAYOUT_MAP);
+//        }
+//        layoutMapSpinner.setSelection(selection);
     }
-    
+
     /**
      * Returns the current ConnectionBean.
      */
     public ConnectionBean getCurrentConnection() {
         return selected;
     }
-    
+
     protected void updateSelectedFromView() {
         if (selected == null) {
             return;
         }
         selected.setConnectionType(selectedConnType);
         selected.setAddress(ipText.getText().toString());
-        
+
         String port = portText.getText().toString();
         if (!TextUtils.isEmpty(port)) {
             try {
                 selected.setPort(Integer.parseInt(portText.getText().toString()));
-            } catch (NumberFormatException nfe) { }
+            } catch (NumberFormatException nfe) {
+            }
         } else {
             selected.setPort(-1);
         }
-        
-        String tlsport = tlsPort.getText().toString();
-        if (!TextUtils.isEmpty(tlsport)) {
-            try {
-                selected.setTlsPort(Integer.parseInt(tlsPort.getText().toString()));
-            } catch (NumberFormatException nfe) { }
-        } else {
+
+//        String tlsport = tlsPort.getText().toString();
+//        if (!TextUtils.isEmpty(tlsport)) {
+//            try {
+//                selected.setTlsPort(Integer.parseInt(tlsPort.getText().toString()));
+//            } catch (NumberFormatException nfe) {
+//            }
+//        } else {
             selected.setTlsPort(-1);
-        }
-        
+ //       }
+
         try {
             selected.setSshPort(Integer.parseInt(sshPort.getText().toString()));
         } catch (NumberFormatException nfe) {
         }
-        
+
         selected.setNickname(textNickname.getText().toString());
         selected.setSshServer(sshServer.getText().toString());
         selected.setSshUser(sshUser.getText().toString());
@@ -399,38 +398,37 @@ public class aSPICE extends MainConfiguration {
         selected.setSshPassPhrase(sshPassphrase.getText().toString());
         selected.setSshPassword(sshPassword.getText().toString());
         selected.setRdpResType(spinnerGeometry.getSelectedItemPosition());
-        try    {
+        try {
             selected.setRdpWidth(Integer.parseInt(resWidth.getText().toString()));
             selected.setRdpHeight(Integer.parseInt(resHeight.getText().toString()));
-        } catch (NumberFormatException nfe) {}
+        } catch (NumberFormatException nfe) {
+        }
         selected.setPassword(passwordText.getText().toString());
         selected.setKeepPassword(checkboxKeepPassword.isChecked());
-        selected.setUseDpadAsArrows(checkboxUseDpadAsArrows.isChecked());
-        selected.setRotateDpad(checkboxRotateDpad.isChecked());
+//        selected.setUseDpadAsArrows(checkboxUseDpadAsArrows.isChecked());
+//        selected.setRotateDpad(checkboxRotateDpad.isChecked());
         selected.setUseLocalCursor(checkboxLocalCursor.isChecked());
         selected.setEnableSound(checkboxEnableSound.isChecked());
-        
+
         TextView selection = null;
-        if (layoutMapSpinner != null) {
-            selection = (TextView) layoutMapSpinner.getSelectedView();
-        }
+//        if (layoutMapSpinner != null) {
+//            selection = (TextView) layoutMapSpinner.getSelectedView();
+//        }
         if (selection != null) {
             selected.setLayoutMap(selection.getText().toString());
         }
     }
-    
+
     private List<String> listFiles(String dirFrom) throws IOException {
         Resources res = getResources();
         AssetManager am = res.getAssets();
         String fileList[] = am.list(dirFrom);
 
-            if (fileList != null)
-            {   
-                for ( int i = 0;i<fileList.length;i++)
-                {
-                    Log.d("",fileList[i]); 
-                }
+        if (fileList != null) {
+            for (int i = 0; i < fileList.length; i++) {
+                Log.d("", fileList[i]);
             }
-        return (List<String>)Arrays.asList(fileList);
+        }
+        return (List<String>) Arrays.asList(fileList);
     }
 }

@@ -19,7 +19,7 @@
 package com.iiordanov.tigervnc.rdr;
 
 public class EndOfStream extends Exception {
-  public EndOfStream() {
-    super("EndOfStream");
-  }
+    public EndOfStream() {
+        super("EndOfStream");
+    }
 }

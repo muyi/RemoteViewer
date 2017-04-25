@@ -19,9 +19,10 @@
 package com.iiordanov.tigervnc.rdr;
 
 class IOException extends Exception {
-  public IOException(java.io.IOException ex_) {
-    super(ex_.toString());
-    ex = ex_;
-  }
-  java.io.IOException ex;
+    public IOException(java.io.IOException ex_) {
+        super(ex_.toString());
+        ex = ex_;
+    }
+
+    java.io.IOException ex;
 }

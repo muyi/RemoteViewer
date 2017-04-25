@@ -20,25 +20,27 @@ package com.iiordanov.tigervnc.rfb;
 
 public class RawDecoder extends Decoder {
 
-  public RawDecoder(CMsgReader reader_) { reader = reader_; }
-
-  public void readRect(Rect r, CMsgHandler handler) {
-    int x = r.tl.x;
-    int y = r.tl.y;
-    int w = r.width();
-    int h = r.height();
-    int[] imageBuf = reader.getImageBuf(w * h);
-    int nPixels = imageBuf.length / (reader.bpp() / 8);
-    while (h > 0) {
-      int nRows = nPixels / w;
-      if (nRows > h) nRows = h;
-      reader.is.readPixels(imageBuf, w * h, (reader.bpp() / 8), handler.cp.pf().bigEndian);
-      handler.imageRect(new Rect(x, y, x+w, y+nRows), imageBuf);
-      h -= nRows;
-      y += nRows;
+    public RawDecoder(CMsgReader reader_) {
+        reader = reader_;
     }
-  }
 
-  CMsgReader reader;
-  static LogWriter vlog = new LogWriter("RawDecoder");
+    public void readRect(Rect r, CMsgHandler handler) {
+        int x = r.tl.x;
+        int y = r.tl.y;
+        int w = r.width();
+        int h = r.height();
+        int[] imageBuf = reader.getImageBuf(w * h);
+        int nPixels = imageBuf.length / (reader.bpp() / 8);
+        while (h > 0) {
+            int nRows = nPixels / w;
+            if (nRows > h) nRows = h;
+            reader.is.readPixels(imageBuf, w * h, (reader.bpp() / 8), handler.cp.pf().bigEndian);
+            handler.imageRect(new Rect(x, y, x + w, y + nRows), imageBuf);
+            h -= nRows;
+            y += nRows;
+        }
+    }
+
+    CMsgReader reader;
+    static LogWriter vlog = new LogWriter("RawDecoder");
 }

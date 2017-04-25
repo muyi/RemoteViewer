@@ -19,5 +19,7 @@
 package com.iiordanov.tigervnc.rfb;
 
 public class ConnFailedException extends Exception {
-  public ConnFailedException(String s) { super(s); }
+    public ConnFailedException(String s) {
+        super(s);
+    }
 }

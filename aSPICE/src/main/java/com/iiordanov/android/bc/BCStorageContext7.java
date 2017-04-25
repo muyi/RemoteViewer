@@ -4,15 +4,14 @@
  */
 package com.iiordanov.android.bc;
 
-import java.io.File;
+import android.os.Environment;
 
 import com.iiordanov.aSPICE.MainConfiguration;
 
-import android.os.Environment;
+import java.io.File;
 
 /**
  * @author Michael A. MacDonald
- *
  */
 public class BCStorageContext7 implements IBCStorageContext {
 
@@ -24,7 +23,7 @@ public class BCStorageContext7 implements IBCStorageContext {
         File f = Environment.getExternalStorageDirectory();
         f = new File(f, "Android/data/com.iiordanov.bVNC/files");
         if (type != null)
-            f=new File(f, type);
+            f = new File(f, type);
         f.mkdirs();
         return f;
     }

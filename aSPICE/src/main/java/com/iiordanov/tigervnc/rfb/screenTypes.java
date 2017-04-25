@@ -20,17 +20,17 @@ package com.iiordanov.tigervnc.rfb;
 
 public class screenTypes {
 
-  // Reasons
-  public static final int reasonServer = 0;
-  public static final int reasonClient = 1;
-  public static final int reasonOtherClient = 2;
+    // Reasons
+    public static final int reasonServer = 0;
+    public static final int reasonClient = 1;
+    public static final int reasonOtherClient = 2;
 
-  // Result codes
-  public static final int resultSuccess = 0;
-  public static final int resultProhibited = 1;
-  public static final int resultNoResources = 2;
-  public static final int resultInvalid = 3;
+    // Result codes
+    public static final int resultSuccess = 0;
+    public static final int resultProhibited = 1;
+    public static final int resultNoResources = 2;
+    public static final int resultInvalid = 3;
 
-  public static final int resultUnsolicited = 0xffff; // internal code used for server changes
+    public static final int resultUnsolicited = 0xffff; // internal code used for server changes
 
 }

@@ -43,7 +43,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Connection Type"
+                    android:text="@string/connection_type"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
 
@@ -169,9 +169,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight=".5"
                             android:hint="@string/ssh_passphrase_hint"
-                            android:inputType="textNoSuggestions"
+                            android:inputType="textNoSuggestions|textPassword"
                             android:maxLines="1"
-                            android:password="true"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <CheckBox
@@ -200,7 +199,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SPICE Connection Settings"
+                    android:text="@string/spice_connection_settings"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
 
@@ -246,36 +245,6 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/buttonImportCa"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/spice_button_import_ca"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <EditText
-                        android:id="@+id/tlsPort"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:hint="@string/spice_tls_port_hint"
-                        android:inputType="textNoSuggestions|textVisiblePassword"
-                        android:maxLines="1"
-                        android:minWidth="100dip"
-                        android:nextFocusDown="@+id/certSubject"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
-            </TableRow>
-
-            <TableRow>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
                     <EditText
                         android:id="@+id/textPASSWORD"
                         android:layout_width="fill_parent"
@@ -296,14 +265,6 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
                 </LinearLayout>
             </TableRow>
-
-            <TableRow>
-
-                <Spinner
-                    android:id="@+id/layoutMaps"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
-            </TableRow>
         </TableLayout>
 
         <LinearLayout
@@ -321,7 +282,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Show Advanced Settings"
+                android:text="@string/show_advanced_settings"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
@@ -379,7 +340,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Local Device Tweaks"
+                android:text="@string/local_device_tweaks"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <CheckBox
@@ -391,22 +352,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <CheckBox
-                android:id="@+id/checkboxUseDpadAsArrows"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left|center_vertical"
-                android:text="@string/dpad_as_arrows"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <CheckBox
-                android:id="@+id/checkboxRotateDpad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left|center_vertical"
-                android:text="@string/rotate_dpad"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <CheckBox
                 android:id="@+id/checkboxUseLocalCursor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -414,12 +359,5 @@
                 android:text="@string/local_mouse_check"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
-
-        <Button
-            android:id="@+id/buttonImportExport"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/import_export_settings"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 </ScrollView>

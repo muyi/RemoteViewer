@@ -3,10 +3,10 @@ package com.iiordanov.aSPICE.input;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
-import com.iiordanov.android.bc.BCFactory;
 import com.iiordanov.aSPICE.R;
 import com.iiordanov.aSPICE.RemoteCanvas;
 import com.iiordanov.aSPICE.RemoteCanvasActivity;
+import com.iiordanov.android.bc.BCFactory;
 
 public class TouchMouseDragPanInputHandler extends AbstractGestureInputHandler {
     static final String TAG = "TouchMouseDragPanInputHandler";
@@ -17,10 +17,8 @@ public class TouchMouseDragPanInputHandler extends AbstractGestureInputHandler {
      * per pan interval
      */
     static final float FLING_FACTOR = 8;
-    
-    /**
-     * @param c
-     */
+
+
     public TouchMouseDragPanInputHandler(RemoteCanvasActivity va, RemoteCanvas v, boolean slowScrolling) {
         super(va, v, slowScrolling);
     }
@@ -88,13 +86,13 @@ public class TouchMouseDragPanInputHandler extends AbstractGestureInputHandler {
         // If we've performed a right/middle-click and the gesture is not over yet, do not start drag mode.
         if (secondPointerWasDown || thirdPointerWasDown)
             return;
-        
+
         BCFactory.getInstance().getBCHaptic().performLongPressHaptic(canvas);
         canvas.displayShortToastMessage("Panning");
         endDragModesAndScrolling();
         panMode = true;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -117,11 +115,11 @@ public class TouchMouseDragPanInputHandler extends AbstractGestureInputHandler {
         if (e2 != null)
             twoFingers = twoFingers || (e2.getPointerCount() > 1);
 
-        if (twoFingers||inSwiping||inScaling||scalingJustFinished)
+        if (twoFingers || inSwiping || inScaling || scalingJustFinished)
             return true;
 
-        activity.showZoomer(false);
-        
+//        activity.showZoomer(false);
+
         if (!dragMode) {
             dragMode = true;
             p.processPointerEvent(getX(e1), getY(e1), e1.getActionMasked(), e1.getMetaState(), true, false, false, false, 0);

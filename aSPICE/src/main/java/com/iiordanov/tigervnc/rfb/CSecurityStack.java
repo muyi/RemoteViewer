@@ -21,49 +21,52 @@ package com.iiordanov.tigervnc.rfb;
 
 public class CSecurityStack extends CSecurity {
 
-  public CSecurityStack(int Type, String Name, CSecurity s0,
-                     CSecurity s1)
-  {
-    name = Name;
-    type = Type; 
-    state = 0;
-    state0 = s0;
-    state1 = s1;
-  }
-  
-  public boolean processMsg(CConnection cc)
-  {
-    boolean res = true;
-    if (state == 0) {
-      if (state0 != null)
-        res = state0.processMsg(cc);
-  
-      if (!res)
-        return res;
-  
-      state++;
+    public CSecurityStack(int Type, String Name, CSecurity s0,
+                          CSecurity s1) {
+        name = Name;
+        type = Type;
+        state = 0;
+        state0 = s0;
+        state1 = s1;
     }
-  
-    if (state == 1) {
-      if(state1 != null)
-        res = state1.processMsg(cc);
-  
-      if(!res)
+
+    public boolean processMsg(CConnection cc) {
+        boolean res = true;
+        if (state == 0) {
+            if (state0 != null)
+                res = state0.processMsg(cc);
+
+            if (!res)
+                return res;
+
+            state++;
+        }
+
+        if (state == 1) {
+            if (state1 != null)
+                res = state1.processMsg(cc);
+
+            if (!res)
+                return res;
+
+            state++;
+        }
+
         return res;
-  
-      state++;
     }
-  
-    return res;
-  }
 
-  public final int getType() { return type; }
-  public final String description() { return name; }
+    public final int getType() {
+        return type;
+    }
 
-  private int state;
-  private CSecurity state0;
-  private CSecurity state1;
-  private String name;
-  private int type;
+    public final String description() {
+        return name;
+    }
+
+    private int state;
+    private CSecurity state0;
+    private CSecurity state1;
+    private String name;
+    private int type;
 
 }

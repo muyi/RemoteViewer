@@ -23,11 +23,6 @@
 //
 package com.iiordanov.aSPICE;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -44,7 +39,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -72,8 +66,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.iiordanov.android.bc.BCFactory;
-import com.iiordanov.android.zoomer.ZoomControls;
 import com.iiordanov.aSPICE.dialogs.EnterTextDialog;
 import com.iiordanov.aSPICE.dialogs.MetaKeyDialog;
 import com.iiordanov.aSPICE.input.AbstractInputHandler;
@@ -83,13 +75,20 @@ import com.iiordanov.aSPICE.input.SimulatedTouchpadInputHandler;
 import com.iiordanov.aSPICE.input.SingleHandedInputHandler;
 import com.iiordanov.aSPICE.input.TouchMouseDragPanInputHandler;
 import com.iiordanov.aSPICE.input.TouchMouseSwipePanInputHandler;
+import com.iiordanov.android.bc.BCFactory;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 @SuppressWarnings("deprecation")
 public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListener {
 
-    private final static String TAG = "VncCanvasActivity";
+    private final static String TAG = "RemoteCanvasActivity";
 
+    //yxlei 输入方式控制
     AbstractInputHandler inputHandler;
 
     private RemoteCanvas canvas;
@@ -110,10 +109,10 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
             R.id.itemInputTouchPanZoomMouse,
             R.id.itemInputDragPanZoomMouse,
             R.id.itemInputSingleHanded};
-    private static final int scalingModeIds[] = {R.id.itemZoomable, R.id.itemFitToScreen,
-            R.id.itemOneToOne};
+//    private static final int scalingModeIds[] = {R.id.itemZoomable, R.id.itemFitToScreen,
+//            R.id.itemOneToOne};
 
-    ZoomControls zoomer;
+//    ZoomControls zoomer;
     Panner panner;
     SSHConnection sshConnection;
     Handler handler;
@@ -226,12 +225,13 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
                     Log.i(TAG, "Exiting - Insufficent information to connect and connection was not saved.");
                     Toast.makeText(this, getString(R.string.error_uri_noinfo_nosave), Toast.LENGTH_LONG).show();
                     ;
-                } else {
-                    // launch bVNC activity
-                    Log.i(TAG, "Insufficent information to connect, showing connection dialog.");
-                    Intent bVncIntent = new Intent(this, bVNC.class);
-                    startActivity(bVncIntent);
                 }
+//                else {
+//                    // launch bVNC activity
+//                    Log.i(TAG, "Insufficent information to connect, showing connection dialog.");
+//                    Intent bVncIntent = new Intent(this, bVNC.class);
+//                    startActivity(bVncIntent);
+//                }
                 finish();
                 return;
             }
@@ -270,7 +270,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
 
         setContentView(R.layout.canvas);
         canvas = (RemoteCanvas) findViewById(R.id.vnc_canvas);
-        zoomer = (ZoomControls) findViewById(R.id.zoomer);
+//        zoomer = (ZoomControls) findViewById(R.id.zoomer);
 
         // Initialize and define actions for on-screen keys.
         initializeOnScreenKeys();
@@ -325,7 +325,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
                         if (prevBottomOffset != offset) {
                             setExtraKeysVisibility(View.GONE, false);
                             canvas.invalidate();
-                            zoomer.enable();
+//                            zoomer.enable();
                         }
                     }
                 } else {
@@ -337,8 +337,8 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
                         if (prevBottomOffset != offset) {
                             setExtraKeysVisibility(View.VISIBLE, true);
                             canvas.invalidate();
-                            zoomer.hide();
-                            zoomer.disable();
+//                            zoomer.hide();
+//                            zoomer.disable();
                         }
                     }
                 }
@@ -348,24 +348,24 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
             }
         });
 
-        zoomer.hide();
-
-        zoomer.setOnZoomKeyboardClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputMethodManager inputMgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMgr.toggleSoftInput(0, 0);
-            }
-
-        });
-
-        zoomer.setOnShowMenuClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RemoteCanvasActivity.this.openOptionsMenu();
-            }
-
-        });
+//        zoomer.hide();
+//
+//        zoomer.setOnZoomKeyboardClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                InputMethodManager inputMgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                inputMgr.toggleSoftInput(0, 0);
+//            }
+//
+//        });
+//
+//        zoomer.setOnShowMenuClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                RemoteCanvasActivity.this.openOptionsMenu();
+//            }
+//
+//        });
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -376,7 +376,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
         } else {
             params.gravity = Gravity.CENTER | Gravity.RIGHT;
         }
-        zoomer.setLayoutParams(params);
+//        zoomer.setLayoutParams(params);
 
         panner = new Panner(this, canvas.handler);
 
@@ -655,6 +655,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
                 RemoteKeyboard k = canvas.getKeyboard();
                 int key = KeyEvent.KEYCODE_DPAD_RIGHT;
                 if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                    //yxlei 触感反馈
                     BCFactory.getInstance().getBCHaptic().performLongPressHaptic(canvas);
                     keyRight.setImageResource(R.drawable.righton);
                     k.repeatKeyEvent(key, new KeyEvent(e.getAction(), key));
@@ -763,7 +764,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
      */
     void setModes() {
         AbstractInputHandler handler = getInputHandlerByName(connection.getInputMode());
-        AbstractScaling.getByScaleType(connection.getScaleMode()).setScaleTypeForActivity(this);
+//        AbstractScaling.getByScaleType(connection.getScaleMode()).setScaleTypeForActivity(this);
         this.inputHandler = handler;
         showPanningState(false);
     }
@@ -841,18 +842,18 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
     private void correctAfterRotation() {
         // Its quite common to see NullPointerExceptions here when this function is called
         // at the point of disconnection. Hence, we catch and ignore the error.
-        float oldScale = canvas.scaling.getScale();
-        int x = canvas.absoluteXPosition;
-        int y = canvas.absoluteYPosition;
-        canvas.scaling.setScaleTypeForActivity(RemoteCanvasActivity.this);
-        float newScale = canvas.scaling.getScale();
-        canvas.scaling.adjust(this, oldScale / newScale, 0, 0);
-        newScale = canvas.scaling.getScale();
-        if (newScale <= oldScale) {
-            canvas.absoluteXPosition = x;
-            canvas.absoluteYPosition = y;
-            canvas.scrollToAbsolute();
-        }
+//        float oldScale = canvas.scaling.getScale();
+//        int x = canvas.absoluteXPosition;
+//        int y = canvas.absoluteYPosition;
+//        canvas.scaling.setScaleTypeForActivity(RemoteCanvasActivity.this);
+//        float newScale = canvas.scaling.getScale();
+//        canvas.scaling.adjust(this, oldScale / newScale, 0, 0);
+//        newScale = canvas.scaling.getScale();
+//        if (newScale <= oldScale) {
+//            canvas.absoluteXPosition = x;
+//            canvas.absoluteYPosition = y;
+//            canvas.scrollToAbsolute();
+//        }
     }
 
 
@@ -894,15 +895,14 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.e(TAG,"onCreateOptionsMenu");
         try {
-            getMenuInflater().inflate(R.menu.vnccanvasactivitymenu, menu);
+            getMenuInflater().inflate(R.menu.canvasactivitymenu, menu);
 
-            menu.findItem(canvas.scaling.getId()).setChecked(true);
+//            menu.findItem(canvas.scaling.getId()).setChecked(true);
 
             Menu inputMenu = menu.findItem(R.id.itemInputMode).getSubMenu();
             inputModeMenuItems = new MenuItem[inputModeIds.length];
@@ -911,18 +911,18 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
             }
             updateInputMenu();
 
-            Menu scalingMenu = menu.findItem(R.id.itemScaling).getSubMenu();
-            scalingModeMenuItems = new MenuItem[scalingModeIds.length];
-            for (int i = 0; i < scalingModeIds.length; i++) {
-                scalingModeMenuItems[i] = scalingMenu.findItem(scalingModeIds[i]);
-            }
-            updateScalingMenu();
+//            Menu scalingMenu = menu.findItem(R.id.itemScaling).getSubMenu();
+//            scalingModeMenuItems = new MenuItem[scalingModeIds.length];
+//            for (int i = 0; i < scalingModeIds.length; i++) {
+//                scalingModeMenuItems[i] = scalingMenu.findItem(scalingModeIds[i]);
+//            }
+//            updateScalingMenu();
 
             // Set the text of the Extra Keys menu item appropriately.
-            if (connection.getExtraKeysToggleType() == Constants.EXTRA_KEYS_ON)
-                menu.findItem(R.id.itemExtraKeys).setTitle(R.string.extra_keys_disable);
-            else
-                menu.findItem(R.id.itemExtraKeys).setTitle(R.string.extra_keys_enable);
+//            if (connection.getExtraKeysToggleType() == Constants.EXTRA_KEYS_ON)
+//                menu.findItem(R.id.itemExtraKeys).setTitle(R.string.extra_keys_disable);
+//            else
+//                menu.findItem(R.id.itemExtraKeys).setTitle(R.string.extra_keys_enable);
             
     /*        menu.findItem(R.id.itemFollowMouse).setChecked(
                     connection.getFollowMouse());
@@ -947,23 +947,23 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
     /**
      * Change the scaling mode sub-menu to reflect available scaling modes.
      */
-    void updateScalingMenu() {
-        try {
-            for (MenuItem item : scalingModeMenuItems) {
-                // If the entire framebuffer is NOT contained in the bitmap, fit-to-screen is meaningless.
-                if (item.getItemId() == R.id.itemFitToScreen) {
-                    if (canvas != null && canvas.bitmapData != null &&
-                            (canvas.bitmapData.bitmapheight != canvas.bitmapData.framebufferheight ||
-                                    canvas.bitmapData.bitmapwidth != canvas.bitmapData.framebufferwidth))
-                        item.setEnabled(false);
-                    else
-                        item.setEnabled(true);
-                } else
-                    item.setEnabled(true);
-            }
-        } catch (NullPointerException e) {
-        }
-    }
+//    void updateScalingMenu() {
+//        try {
+//            for (MenuItem item : scalingModeMenuItems) {
+//                // If the entire framebuffer is NOT contained in the bitmap, fit-to-screen is meaningless.
+//                if (item.getItemId() == R.id.itemFitToScreen) {
+//                    if (canvas != null && canvas.bitmapData != null &&
+//                            (canvas.bitmapData.bitmapheight != canvas.bitmapData.framebufferheight ||
+//                                    canvas.bitmapData.bitmapwidth != canvas.bitmapData.framebufferwidth))
+//                        item.setEnabled(false);
+//                    else
+//                        item.setEnabled(true);
+//                } else
+//                    item.setEnabled(true);
+//            }
+//        } catch (NullPointerException e) {
+//        }
+//    }
 
     /**
      * Change the input mode sub-menu to reflect change in scaling
@@ -971,7 +971,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
     void updateInputMenu() {
         try {
             for (MenuItem item : inputModeMenuItems) {
-                item.setEnabled(canvas.scaling.isValidInputMode(item.getItemId()));
+//                item.setEnabled(canvas.scaling.isValidInputMode(item.getItemId()));
                 if (getInputHandlerById(item.getItemId()) == inputHandler)
                     item.setChecked(true);
             }
@@ -1080,13 +1080,13 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
                 selectColorModel();
                 return true;
             // Following sets one of the scaling options
-            case R.id.itemZoomable:
-            case R.id.itemOneToOne:
-            case R.id.itemFitToScreen:
-                AbstractScaling.getById(item.getItemId()).setScaleTypeForActivity(this);
-                item.setChecked(true);
-                showPanningState(false);
-                return true;
+//            case R.id.itemZoomable:
+//            case R.id.itemOneToOne:
+//            case R.id.itemFitToScreen:
+//                AbstractScaling.getById(item.getItemId()).setScaleTypeForActivity(this);
+//                item.setChecked(true);
+//                showPanningState(false);
+//                return true;
             case R.id.itemCenterMouse:
                 canvas.getPointer().warpMouse(canvas.absoluteXPosition + canvas.getVisibleWidth() / 2,
                         canvas.absoluteYPosition + canvas.getVisibleHeight() / 2);
@@ -1139,21 +1139,21 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
             //case R.id.itemOpenDoc:
             //    Utils.showDocumentation(this);
             //    return true;
-            case R.id.itemExtraKeys:
-                if (connection.getExtraKeysToggleType() == Constants.EXTRA_KEYS_ON) {
-                    connection.setExtraKeysToggleType(Constants.EXTRA_KEYS_OFF);
-                    item.setTitle(R.string.extra_keys_enable);
-                    setExtraKeysVisibility(View.GONE, false);
-                } else {
-                    connection.setExtraKeysToggleType(Constants.EXTRA_KEYS_ON);
-                    item.setTitle(R.string.extra_keys_disable);
-                    setExtraKeysVisibility(View.VISIBLE, false);
-                    extraKeysHidden = false;
-                }
-                setKeyStowDrawableAndVisibility();
-                connection.save(database.getWritableDatabase());
-                database.close();
-                return true;
+//            case R.id.itemExtraKeys:
+//                if (connection.getExtraKeysToggleType() == Constants.EXTRA_KEYS_ON) {
+//                    connection.setExtraKeysToggleType(Constants.EXTRA_KEYS_OFF);
+//                    item.setTitle(R.string.extra_keys_enable);
+//                    setExtraKeysVisibility(View.GONE, false);
+//                } else {
+//                    connection.setExtraKeysToggleType(Constants.EXTRA_KEYS_ON);
+//                    item.setTitle(R.string.extra_keys_disable);
+//                    setExtraKeysVisibility(View.VISIBLE, false);
+//                    extraKeysHidden = false;
+//                }
+//                setKeyStowDrawableAndVisibility();
+//                connection.save(database.getWritableDatabase());
+//                database.close();
+//                return true;
             case R.id.itemHelpInputMode:
                 showDialog(R.id.itemHelpInputMode);
                 return true;
@@ -1214,7 +1214,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
         canvas = null;
         connection = null;
         database = null;
-        zoomer = null;
+//        zoomer = null;
         panner = null;
         clearInputHandlers();
         inputHandler = null;
@@ -1277,8 +1277,8 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
     public boolean onTrackballEvent(MotionEvent event) {
         try {
             // If we are using the Dpad as arrow keys, don't send the event to the inputHandler.
-            if (connection.getUseDpadAsArrows())
-                return false;
+//            if (connection.getUseDpadAsArrows())
+//                return false;
             return inputHandler.onTrackballEvent(event);
         } catch (NullPointerException e) {
         }
@@ -1348,29 +1348,29 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
         dialog.show();
     }
 
-    long hideZoomAfterMs;
-    static final long ZOOM_HIDE_DELAY_MS = 2500;
-    HideZoomRunnable hideZoomInstance = new HideZoomRunnable();
+//    long hideZoomAfterMs;
+//    static final long ZOOM_HIDE_DELAY_MS = 2500;
+//    HideZoomRunnable hideZoomInstance = new HideZoomRunnable();
 
     public void stopPanner() {
         panner.stop();
     }
 
-    public void showZoomer(boolean force) {
-        if (force || zoomer.getVisibility() != View.VISIBLE) {
-            zoomer.show();
-            hideZoomAfterMs = SystemClock.uptimeMillis() + ZOOM_HIDE_DELAY_MS;
-            canvas.handler.postAtTime(hideZoomInstance, hideZoomAfterMs + 10);
-        }
-    }
+//    public void showZoomer(boolean force) {
+//        if (force || zoomer.getVisibility() != View.VISIBLE) {
+//            zoomer.show();
+//            hideZoomAfterMs = SystemClock.uptimeMillis() + ZOOM_HIDE_DELAY_MS;
+//            canvas.handler.postAtTime(hideZoomInstance, hideZoomAfterMs + 10);
+//        }
+//    }
 
-    private class HideZoomRunnable implements Runnable {
-        public void run() {
-            if (SystemClock.uptimeMillis() >= hideZoomAfterMs) {
-                zoomer.hide();
-            }
-        }
-    }
+//    private class HideZoomRunnable implements Runnable {
+//        public void run() {
+//            if (SystemClock.uptimeMillis() >= hideZoomAfterMs) {
+//                zoomer.hide();
+//            }
+//        }
+//    }
 
     public ConnectionBean getConnection() {
         return connection;
@@ -1378,12 +1378,12 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
 
     // Returns whether we are using D-pad/Trackball to send arrow key events.
     public boolean getUseDpadAsArrows() {
-        return connection.getUseDpadAsArrows();
+        return false;
     }
 
     // Returns whether the D-pad should be rotated to accommodate BT keyboards paired with phones.
     public boolean getRotateDpad() {
-        return connection.getRotateDpad();
+        return false;
     }
 
     public float getSensitivity() {

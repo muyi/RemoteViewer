@@ -42,7 +42,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
@@ -60,23 +59,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.Toast;
 
-import com.freerdp.freerdpcore.application.GlobalApp;
-import com.freerdp.freerdpcore.application.SessionState;
-import com.freerdp.freerdpcore.domain.BookmarkBase;
-import com.freerdp.freerdpcore.domain.ManualBookmark;
 import com.freerdp.freerdpcore.services.LibFreeRDP;
-import com.iiordanov.android.bc.BCFactory;
 import com.iiordanov.aSPICE.dialogs.GetTextFragment;
-import com.iiordanov.aSPICE.exceptions.AnonCipherUnsupportedException;
 import com.iiordanov.aSPICE.input.RemoteKeyboard;
 import com.iiordanov.aSPICE.input.RemotePointer;
-import com.iiordanov.aSPICE.input.RemoteRdpKeyboard;
-import com.iiordanov.aSPICE.input.RemoteRdpPointer;
 import com.iiordanov.aSPICE.input.RemoteSpiceKeyboard;
 import com.iiordanov.aSPICE.input.RemoteSpicePointer;
-import com.iiordanov.aSPICE.input.RemoteVncKeyboard;
-import com.iiordanov.aSPICE.input.RemoteVncPointer;
-import com.iiordanov.tigervnc.vncviewer.CConn;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -89,7 +77,7 @@ import java.util.Timer;
 public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEventListener, LibFreeRDP.EventListener {
     private final static String TAG = "RemoteCanvas";
 
-    public AbstractScaling scaling;
+//    public AbstractScaling scaling;
 
     // Variable indicating that we are currently scrolling in simulated touchpad mode.
     public boolean inScrolling = false;
@@ -99,18 +87,18 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
     Database database;
     private SSHConnection sshConnection = null;
 
-    // VNC protocol connection
+
     public RfbConnectable rfbconn = null;
-    private RfbProto rfb = null;
-    private CConn cc = null;
-    private RdpCommunicator rdpcomm = null;
+ //       private RfbProto rfb = null;
+//    private CConn cc = null;
+//    private RdpCommunicator rdpcomm = null;
     private SpiceCommunicator spicecomm = null;
     private Socket sock = null;
 
     boolean maintainConnection = true;
 
     // RFB Decoder
-    Decoder decoder = null;
+//    Decoder decoder = null;
 
     // The remote pointer and keyboard
     RemotePointer pointer;
@@ -123,8 +111,8 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
     boolean compact = false;
 
     // Keeps track of libFreeRDP instance. 
-    GlobalApp freeRdpApp = null;
-    SessionState session = null;
+//    GlobalApp freeRdpApp = null;
+//   SessionState session = null;
 
     // Progress dialog shown at connection time.
     ProgressDialog pd;
@@ -169,13 +157,13 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
     /*
      * This flag indicates whether this is the RDP 'version' or not.
      */
-    boolean isRdp = false;
+  //  boolean isRdp = false;
 
     /*
      * This flag indicates whether this is the SPICE 'version' or not.
      */
     boolean isSpice = true;
-    boolean spiceUpdateReceived = false;
+    boolean spiceUpdateReceived = true;
 
     /*
      * Variable used for BB workarounds.
@@ -196,23 +184,27 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
 
         clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        decoder = new Decoder(this);
+  //      decoder = new Decoder(this);
 
-        isRdp = getContext().getPackageName().contains("RDP");
+        //    isRdp = getContext().getPackageName().contains("RDP");
         //    isSpice = getContext().getPackageName().contains("SPICE");
 
         final Display display = ((Activity) context).getWindow().getWindowManager().getDefaultDisplay();
-        displayWidth = display.getWidth();
-        displayHeight = display.getHeight();
+        //    displayWidth = display.getWidth();
+        //    displayHeight = display.getHeight();
         DisplayMetrics metrics = new DisplayMetrics();
         display.getMetrics(metrics);
         displayDensity = metrics.density;
+        displayWidth = metrics.widthPixels;
+        displayHeight = metrics.heightPixels;
+        Log.w(TAG, "displayWidth=" + displayWidth + ",displayHeight=" + displayHeight + ",displayDensity=" + displayDensity);
 
-        if (android.os.Build.MODEL.contains("BlackBerry") ||
-                android.os.Build.BRAND.contains("BlackBerry") ||
-                android.os.Build.MANUFACTURER.contains("BlackBerry")) {
-            bb = true;
-        }
+
+//        if (android.os.Build.MODEL.contains("BlackBerry") ||
+//                android.os.Build.BRAND.contains("BlackBerry") ||
+//                android.os.Build.MANUFACTURER.contains("BlackBerry")) {
+//            bb = true;
+//        }
     }
 
 
@@ -227,7 +219,7 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
         this.setModes = setModes;
         connection = bean;
         database = db;
-        decoder.setColorModel(COLORMODEL.valueOf(bean.getColorModel()));
+ //       decoder.setColorModel(COLORMODEL.valueOf(bean.getColorModel()));
 
         // Startup the connection thread with a progress dialog
         pd = ProgressDialog.show(getContext(), getContext().getString(R.string.info_progress_dialog_connecting),
@@ -271,11 +263,12 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
 
                     if (isSpice) {
                         startSpiceConnection();
-                    } else if (isRdp) {
-                        startRdpConnection();
-                    } else {
-                        startVncConnection();
                     }
+//                    else if (isRdp) {
+//                        startRdpConnection();
+//                    } else {
+//                        startVncConnection();
+//                    }
                 } catch (Throwable e) {
                     if (maintainConnection) {
                         Log.e(TAG, e.toString());
@@ -359,69 +352,69 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
      *
      * @throws Exception
      */
-    private void startRdpConnection() throws Exception {
-        // Get the address and port (based on whether an SSH tunnel is being established or not).
-        String address = getAddress();
-        int rdpPort = getPort(connection.getPort());
-
-        // This is necessary because it initializes a synchronizedMap referenced later.
-        freeRdpApp = new GlobalApp();
-
-        // Create a manual bookmark and populate it from settings.
-        BookmarkBase bookmark = new ManualBookmark();
-        bookmark.<ManualBookmark>get().setLabel(connection.getNickname());
-        bookmark.<ManualBookmark>get().setHostname(address);
-        bookmark.<ManualBookmark>get().setPort(rdpPort);
-        bookmark.<ManualBookmark>get().setUsername(connection.getUserName());
-        bookmark.<ManualBookmark>get().setDomain(connection.getRdpDomain());
-        bookmark.<ManualBookmark>get().setPassword(connection.getPassword());
-
-        // Create a session based on the bookmark
-        session = GlobalApp.createSession(bookmark, this.getContext());
-
-        // Set a writable data directory
-        //LibFreeRDP.setDataDirectory(session.getInstance(), getContext().getFilesDir().toString());
-
-        BookmarkBase.DebugSettings debugSettings = session.getBookmark().getDebugSettings();
-        debugSettings.setAsyncChannel(false);
-        debugSettings.setAsyncTransport(false);
-
-        // Set screen settings to native res if instructed to, or if height or width are too small.
-        BookmarkBase.ScreenSettings screenSettings = session.getBookmark().getActiveScreenSettings();
-        waitUntilInflated();
-        int remoteWidth = getRemoteWidth(getWidth(), getHeight());
-        int remoteHeight = getRemoteHeight(getWidth(), getHeight());
-        screenSettings.setWidth(remoteWidth);
-        screenSettings.setHeight(remoteHeight);
-        screenSettings.setColors(16);
-
-        // Set performance flags.
-        BookmarkBase.PerformanceFlags performanceFlags = session.getBookmark().getPerformanceFlags();
-        performanceFlags.setRemoteFX(false);
-        performanceFlags.setWallpaper(connection.getDesktopBackground());
-        performanceFlags.setFontSmoothing(connection.getFontSmoothing());
-        performanceFlags.setDesktopComposition(connection.getDesktopComposition());
-        performanceFlags.setFullWindowDrag(connection.getWindowContents());
-        performanceFlags.setMenuAnimations(connection.getMenuAnimation());
-        performanceFlags.setTheming(connection.getVisualStyles());
-
-        BookmarkBase.AdvancedSettings advancedSettings = session.getBookmark().getAdvancedSettings();
-        advancedSettings.setRedirectSDCard(connection.getRedirectSdCard());
-        advancedSettings.setConsoleMode(connection.getConsoleMode());
-        advancedSettings.setRedirectSound(connection.getRemoteSoundType());
-        advancedSettings.setRedirectMicrophone(connection.getEnableRecording());
-
-        rdpcomm = new RdpCommunicator(session);
-        rfbconn = rdpcomm;
-        pointer = new RemoteRdpPointer(rfbconn, RemoteCanvas.this, handler);
-        keyboard = new RemoteRdpKeyboard(rfbconn, RemoteCanvas.this, handler);
-
-        session.setUIEventListener(RemoteCanvas.this);
-        LibFreeRDP.setEventListener(RemoteCanvas.this);
-
-        session.connect(mContext);
-        pd.dismiss();
-    }
+//    private void startRdpConnection() throws Exception {
+//        // Get the address and port (based on whether an SSH tunnel is being established or not).
+//        String address = getAddress();
+//        int rdpPort = getPort(connection.getPort());
+//
+//        // This is necessary because it initializes a synchronizedMap referenced later.
+//        freeRdpApp = new GlobalApp();
+//
+//        // Create a manual bookmark and populate it from settings.
+//        BookmarkBase bookmark = new ManualBookmark();
+//        bookmark.<ManualBookmark>get().setLabel(connection.getNickname());
+//        bookmark.<ManualBookmark>get().setHostname(address);
+//        bookmark.<ManualBookmark>get().setPort(rdpPort);
+//        bookmark.<ManualBookmark>get().setUsername(connection.getUserName());
+//        bookmark.<ManualBookmark>get().setDomain(connection.getRdpDomain());
+//        bookmark.<ManualBookmark>get().setPassword(connection.getPassword());
+//
+//        // Create a session based on the bookmark
+//        session = GlobalApp.createSession(bookmark, this.getContext());
+//
+//        // Set a writable data directory
+//        //LibFreeRDP.setDataDirectory(session.getInstance(), getContext().getFilesDir().toString());
+//
+//        BookmarkBase.DebugSettings debugSettings = session.getBookmark().getDebugSettings();
+//        debugSettings.setAsyncChannel(false);
+//        debugSettings.setAsyncTransport(false);
+//
+//        // Set screen settings to native res if instructed to, or if height or width are too small.
+//        BookmarkBase.ScreenSettings screenSettings = session.getBookmark().getActiveScreenSettings();
+//        waitUntilInflated();
+//        int remoteWidth = getRemoteWidth(getWidth(), getHeight());
+//        int remoteHeight = getRemoteHeight(getWidth(), getHeight());
+//        screenSettings.setWidth(remoteWidth);
+//        screenSettings.setHeight(remoteHeight);
+//        screenSettings.setColors(16);
+//
+//        // Set performance flags.
+//        BookmarkBase.PerformanceFlags performanceFlags = session.getBookmark().getPerformanceFlags();
+//        performanceFlags.setRemoteFX(false);
+//        performanceFlags.setWallpaper(connection.getDesktopBackground());
+//        performanceFlags.setFontSmoothing(connection.getFontSmoothing());
+//        performanceFlags.setDesktopComposition(connection.getDesktopComposition());
+//        performanceFlags.setFullWindowDrag(connection.getWindowContents());
+//        performanceFlags.setMenuAnimations(connection.getMenuAnimation());
+//        performanceFlags.setTheming(connection.getVisualStyles());
+//
+//        BookmarkBase.AdvancedSettings advancedSettings = session.getBookmark().getAdvancedSettings();
+//        advancedSettings.setRedirectSDCard(connection.getRedirectSdCard());
+//        advancedSettings.setConsoleMode(connection.getConsoleMode());
+//        advancedSettings.setRedirectSound(connection.getRemoteSoundType());
+//        advancedSettings.setRedirectMicrophone(connection.getEnableRecording());
+//
+//        rdpcomm = new RdpCommunicator(session);
+//        rfbconn = rdpcomm;
+//        pointer = new RemoteRdpPointer(rfbconn, RemoteCanvas.this, handler);
+//        keyboard = new RemoteRdpKeyboard(rfbconn, RemoteCanvas.this, handler);
+//
+//        session.setUIEventListener(RemoteCanvas.this);
+//        LibFreeRDP.setEventListener(RemoteCanvas.this);
+//
+//        session.connect(mContext);
+//        pd.dismiss();
+//    }
 
 
     /**
@@ -429,78 +422,78 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
      *
      * @throws Exception
      */
-    private void startVncConnection() throws Exception {
-        Log.i(TAG, "Connecting to: " + connection.getAddress() + ", port: " + connection.getPort());
-        String address = getAddress();
-        int vncPort = getPort(connection.getPort());
-        boolean sslTunneled = connection.getConnectionType() == Constants.CONN_TYPE_STUNNEL;
-
-        try {
-            rfb = new RfbProto(decoder, this, address, vncPort, connection.getPrefEncoding(), connection.getViewOnly(),
-                    connection.getUseLocalCursor(), sslTunneled, connection.getIdHashAlgorithm(),
-                    connection.getIdHash(), connection.getSshHostKey());
-            Log.v(TAG, "Connected to server: " + address + " at port: " + vncPort);
-            rfb.initializeAndAuthenticate(connection.getUserName(), connection.getPassword(),
-                    connection.getUseRepeater(), connection.getRepeaterId(),
-                    connection.getConnectionType(), connection.getSshHostKey());
-        } catch (AnonCipherUnsupportedException e) {
-            showFatalMessageAndQuit(getContext().getString(R.string.error_anon_dh_unsupported));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(getContext().getString(R.string.error_vnc_unable_to_connect) +
-                    Utils.messageAndStackTraceAsString(e));
-        }
-
-        rfbconn = rfb;
-        pointer = new RemoteVncPointer(rfbconn, RemoteCanvas.this, handler);
-        boolean rAltAsIsoL3Shift = Utils.querySharedPreferenceBoolean(this.getContext(),
-                Constants.rAltAsIsoL3ShiftTag);
-        keyboard = new RemoteVncKeyboard(rfbconn, RemoteCanvas.this, handler, rAltAsIsoL3Shift);
-
-        rfb.writeClientInit();
-        rfb.readServerInit();
-        initializeBitmap(displayWidth, displayHeight);
-        decoder.setPixelFormat(rfb);
-
-        handler.post(new Runnable() {
-            public void run() {
-                pd.setMessage(getContext().getString(R.string.info_progress_dialog_downloading));
-            }
-        });
-
-        sendUnixAuth();
-        if (connection.getUseLocalCursor())
-            initializeSoftCursor();
-
-        handler.post(drawableSetter);
-        handler.post(setModes);
-
-        // Hide progress dialog
-        if (pd.isShowing())
-            pd.dismiss();
-
-        rfb.processProtocol();
-    }
+//    private void startVncConnection() throws Exception {
+//        Log.i(TAG, "Connecting to: " + connection.getAddress() + ", port: " + connection.getPort());
+//        String address = getAddress();
+//        int vncPort = getPort(connection.getPort());
+//        boolean sslTunneled = connection.getConnectionType() == Constants.CONN_TYPE_STUNNEL;
+//
+//        try {
+//            rfb = new RfbProto(decoder, this, address, vncPort, connection.getPrefEncoding(), connection.getViewOnly(),
+//                    connection.getUseLocalCursor(), sslTunneled, connection.getIdHashAlgorithm(),
+//                    connection.getIdHash(), connection.getSshHostKey());
+//            Log.v(TAG, "Connected to server: " + address + " at port: " + vncPort);
+//            rfb.initializeAndAuthenticate(connection.getUserName(), connection.getPassword(),
+//                    connection.getUseRepeater(), connection.getRepeaterId(),
+//                    connection.getConnectionType(), connection.getSshHostKey());
+//        } catch (AnonCipherUnsupportedException e) {
+//            showFatalMessageAndQuit(getContext().getString(R.string.error_anon_dh_unsupported));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new Exception(getContext().getString(R.string.error_vnc_unable_to_connect) +
+//                    Utils.messageAndStackTraceAsString(e));
+//        }
+//
+//        rfbconn = rfb;
+//        pointer = new RemoteVncPointer(rfbconn, RemoteCanvas.this, handler);
+//        boolean rAltAsIsoL3Shift = Utils.querySharedPreferenceBoolean(this.getContext(),
+//                Constants.rAltAsIsoL3ShiftTag);
+//        keyboard = new RemoteVncKeyboard(rfbconn, RemoteCanvas.this, handler, rAltAsIsoL3Shift);
+//
+//        rfb.writeClientInit();
+//        rfb.readServerInit();
+//        initializeBitmap(displayWidth, displayHeight);
+//        decoder.setPixelFormat(rfb);
+//
+//        handler.post(new Runnable() {
+//            public void run() {
+//                pd.setMessage(getContext().getString(R.string.info_progress_dialog_downloading));
+//            }
+//        });
+//
+//        sendUnixAuth();
+//        if (connection.getUseLocalCursor())
+//            initializeSoftCursor();
+//
+//        handler.post(drawableSetter);
+//        handler.post(setModes);
+//
+//        // Hide progress dialog
+//        if (pd.isShowing())
+//            pd.dismiss();
+//
+//        rfb.processProtocol();
+//    }
 
 
     /**
      * Sends over the unix username and password if this is VNC over SSH connectio and automatic sending of
      * UNIX credentials is enabled for AutoX (for x11vnc's "-unixpw" option).
      */
-    void sendUnixAuth() {
-        // If the type of connection is ssh-tunneled and we are told to send the unix credentials, then do so.
-        if (connection.getConnectionType() == Constants.CONN_TYPE_SSH && connection.getAutoXUnixAuth()) {
-            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_UNKNOWN, new KeyEvent(SystemClock.uptimeMillis(),
-                    connection.getSshUser(), 0, 0));
-            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_ENTER, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
-            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_ENTER, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
-
-            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_UNKNOWN, new KeyEvent(SystemClock.uptimeMillis(),
-                    connection.getSshPassword(), 0, 0));
-            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_ENTER, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
-            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_ENTER, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
-        }
-    }
+//    void sendUnixAuth() {
+//        // If the type of connection is ssh-tunneled and we are told to send the unix credentials, then do so.
+//        if (connection.getConnectionType() == Constants.CONN_TYPE_SSH && connection.getAutoXUnixAuth()) {
+//            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_UNKNOWN, new KeyEvent(SystemClock.uptimeMillis(),
+//                    connection.getSshUser(), 0, 0));
+//            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_ENTER, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+//            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_ENTER, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
+//
+//            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_UNKNOWN, new KeyEvent(SystemClock.uptimeMillis(),
+//                    connection.getSshPassword(), 0, 0));
+//            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_ENTER, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+//            keyboard.processLocalKeyEvent(KeyEvent.KEYCODE_ENTER, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
+//        }
+//    }
 
 
     /**
@@ -508,44 +501,46 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
      *
      * @throws Exception
      */
-    private void startVencryptConnection() throws Exception {
-        cc = new CConn(RemoteCanvas.this, sock, null, false, connection);
-        rfbconn = cc;
-        pointer = new RemoteVncPointer(rfbconn, RemoteCanvas.this, handler);
-        boolean rAltAsIsoL3Shift = Utils.querySharedPreferenceBoolean(this.getContext(),
-                Constants.rAltAsIsoL3ShiftTag);
-        keyboard = new RemoteVncKeyboard(rfbconn, RemoteCanvas.this, handler, rAltAsIsoL3Shift);
-        initializeBitmap(displayWidth, displayHeight);
-
-        // Initialize the protocol before we dismiss the progress dialog and request for the right
-        // modes to be set.
-        for (int i = 0; i < 6; i++)
-            cc.processMsg();
-
-        handler.post(new Runnable() {
-            public void run() {
-                pd.setMessage(getContext().getString(R.string.info_progress_dialog_downloading));
-            }
-        });
-
-        for (int i = 0; i < 3; i++)
-            cc.processMsg();
-
-        // Hide progress dialog
-        if (pd.isShowing())
-            pd.dismiss();
-
-        cc.processProtocol();
-    }
+//    private void startVencryptConnection() throws Exception {
+//        cc = new CConn(RemoteCanvas.this, sock, null, false, connection);
+//        rfbconn = cc;
+//        pointer = new RemoteVncPointer(rfbconn, RemoteCanvas.this, handler);
+//        boolean rAltAsIsoL3Shift = Utils.querySharedPreferenceBoolean(this.getContext(),
+//                Constants.rAltAsIsoL3ShiftTag);
+//        keyboard = new RemoteVncKeyboard(rfbconn, RemoteCanvas.this, handler, rAltAsIsoL3Shift);
+//        initializeBitmap(displayWidth, displayHeight);
+//
+//        // Initialize the protocol before we dismiss the progress dialog and request for the right
+//        // modes to be set.
+//        for (int i = 0; i < 6; i++)
+//            cc.processMsg();
+//
+//        handler.post(new Runnable() {
+//            public void run() {
+//                pd.setMessage(getContext().getString(R.string.info_progress_dialog_downloading));
+//            }
+//        });
+//
+//        for (int i = 0; i < 3; i++)
+//            cc.processMsg();
+//
+//        // Hide progress dialog
+//        if (pd.isShowing())
+//            pd.dismiss();
+//
+//        cc.processProtocol();
+//    }
 
 
     /**
      * Retreives the requested remote width.
      */
     private int getRemoteWidth(int viewWidth, int viewHeight) {
+        Log.e(TAG,"viewWidth="+viewWidth+",viewHeight="+viewHeight);
         int remoteWidth = 0;
         int reqWidth = connection.getRdpWidth();
         int reqHeight = connection.getRdpHeight();
+        Log.e(TAG,"reqWidth="+reqWidth+",reqHeight="+reqHeight);
         if (connection.getRdpResType() == Constants.RDP_GEOM_SELECT_CUSTOM &&
                 reqWidth >= 2 && reqHeight >= 2) {
             remoteWidth = reqWidth;
@@ -643,49 +638,49 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
      * @param dy
      * @throws IOException
      */
-    void initializeBitmap(int dx, int dy) throws IOException {
-        Log.i(TAG, "Desktop name is " + rfbconn.desktopName());
-        Log.i(TAG, "Desktop size is " + rfbconn.framebufferWidth() + " x " + rfbconn.framebufferHeight());
-        int fbsize = rfbconn.framebufferWidth() * rfbconn.framebufferHeight();
-        capacity = BCFactory.getInstance().getBCActivityManager().getMemoryClass(Utils.getActivityManager(getContext()));
-
-        if (connection.getForceFull() == BitmapImplHint.AUTO) {
-            if (fbsize * CompactBitmapData.CAPACITY_MULTIPLIER <= capacity * 1024 * 1024) {
-                useFull = true;
-                compact = true;
-            } else if (fbsize * FullBufferBitmapData.CAPACITY_MULTIPLIER <= capacity * 1024 * 1024) {
-                useFull = true;
-            } else {
-                useFull = false;
-            }
-        } else
-            useFull = (connection.getForceFull() == BitmapImplHint.FULL);
-
-        if (!useFull) {
-            bitmapData = new LargeBitmapData(rfbconn, this, dx, dy, capacity);
-            android.util.Log.i(TAG, "Using LargeBitmapData.");
-        } else {
-            try {
-                // TODO: Remove this if Android 4.2 receives a fix for a bug which causes it to stop drawing
-                // the bitmap in CompactBitmapData when under load (say playing a video over VNC).
-                if (!compact) {
-                    bitmapData = new FullBufferBitmapData(rfbconn, this, capacity);
-                    android.util.Log.i(TAG, "Using FullBufferBitmapData.");
-                } else {
-                    bitmapData = new CompactBitmapData(rfbconn, this, isSpice);
-                    android.util.Log.i(TAG, "Using CompactBufferBitmapData.");
-                }
-            } catch (Throwable e) { // If despite our efforts we fail to allocate memory, use LBBM.
-                disposeDrawable();
-
-                useFull = false;
-                bitmapData = new LargeBitmapData(rfbconn, this, dx, dy, capacity);
-                android.util.Log.i(TAG, "Using LargeBitmapData.");
-            }
-        }
-
-        decoder.setBitmapData(bitmapData);
-    }
+//    void initializeBitmap(int dx, int dy) throws IOException {
+//        Log.i(TAG, "Desktop name is " + rfbconn.desktopName());
+//        Log.i(TAG, "Desktop size is " + rfbconn.framebufferWidth() + " x " + rfbconn.framebufferHeight());
+//        int fbsize = rfbconn.framebufferWidth() * rfbconn.framebufferHeight();
+//        capacity = BCFactory.getInstance().getBCActivityManager().getMemoryClass(Utils.getActivityManager(getContext()));
+//
+//        if (connection.getForceFull() == BitmapImplHint.AUTO) {
+//            if (fbsize * CompactBitmapData.CAPACITY_MULTIPLIER <= capacity * 1024 * 1024) {
+//                useFull = true;
+//                compact = true;
+//            } else if (fbsize * FullBufferBitmapData.CAPACITY_MULTIPLIER <= capacity * 1024 * 1024) {
+//                useFull = true;
+//            } else {
+//                useFull = false;
+//            }
+//        } else
+//            useFull = (connection.getForceFull() == BitmapImplHint.FULL);
+//
+//        if (!useFull) {
+//            bitmapData = new LargeBitmapData(rfbconn, this, dx, dy, capacity);
+//            Log.i(TAG, "Using LargeBitmapData.");
+//        } else {
+//            try {
+//                // TODO: Remove this if Android 4.2 receives a fix for a bug which causes it to stop drawing
+//                // the bitmap in CompactBitmapData when under load (say playing a video over VNC).
+//                if (!compact) {
+//                    bitmapData = new FullBufferBitmapData(rfbconn, this, capacity);
+//                    android.util.Log.i(TAG, "Using FullBufferBitmapData.");
+//                } else {
+//                    bitmapData = new CompactBitmapData(rfbconn, this, isSpice);
+//                    Log.i(TAG, "Using CompactBufferBitmapData.");
+//                }
+//            } catch (Throwable e) { // If despite our efforts we fail to allocate memory, use LBBM.
+//                disposeDrawable();
+//
+//                useFull = false;
+//                bitmapData = new LargeBitmapData(rfbconn, this, dx, dy, capacity);
+//                Log.i(TAG, "Using LargeBitmapData.");
+//            }
+//        }
+//
+//        decoder.setBitmapData(bitmapData);
+//    }
 
 
     /**
@@ -731,7 +726,7 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
                     useFull = false;
                     bitmapData = new LargeBitmapData(rfbconn, this, getWidth(), getHeight(), capacity);
                 }
-                decoder.setBitmapData(bitmapData);
+           //     decoder.setBitmapData(bitmapData);
             }
         }
         handler.post(drawableSetter);
@@ -852,8 +847,8 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
         clipboardMonitor = null;
         clipboard = null;
         setModes = null;
-        decoder = null;
-        scaling = null;
+  //      decoder = null;
+//        scaling = null;
         drawableSetter = null;
         screenMessage = null;
         desktopInfo = null;
@@ -924,8 +919,8 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
             panY = false;
 
         // We only pan if the current scaling is able to pan.
-        if (scaling != null && !scaling.isAbleToPan())
-            return;
+//        if (scaling != null && !scaling.isAbleToPan())
+//            return;
 
         int x = pointer.getX();
         int y = pointer.getY();
@@ -984,8 +979,8 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
     public boolean pan(int dX, int dY) {
 
         // We only pan if the current scaling is able to pan.
-        if (scaling != null && !scaling.isAbleToPan())
-            return false;
+//        if (scaling != null && !scaling.isAbleToPan())
+//            return false;
 
         double scale = getScale();
 
@@ -1105,12 +1100,12 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
         msg += "\n" + rfbconn.framebufferWidth() + "x" + rfbconn.framebufferHeight();
         String enc = rfbconn.getEncoding();
         // Encoding might not be set when we display this message
-        if (decoder.getColorModel() != null) {
-            if (enc != null && !enc.equals(""))
-                msg += ", " + rfbconn.getEncoding() + getContext().getString(R.string.info_encoding) + decoder.getColorModel().toString();
-            else
-                msg += ", " + decoder.getColorModel().toString();
-        }
+//        if (decoder.getColorModel() != null) {
+//            if (enc != null && !enc.equals(""))
+//                msg += ", " + rfbconn.getEncoding() + getContext().getString(R.string.info_encoding) + decoder.getColorModel().toString();
+//            else
+//                msg += ", " + decoder.getColorModel().toString();
+//        }
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
@@ -1171,7 +1166,7 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
         android.util.Log.d(TAG, "onCreateInputConnection called");
-        int version = android.os.Build.VERSION.SDK_INT;
+        int version = Build.VERSION.SDK_INT;
         BaseInputConnection bic = null;
         if (!bb && version >= Build.VERSION_CODES.JELLY_BEAN) {
             bic = new BaseInputConnection(this, false) {
@@ -1219,9 +1214,9 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
     }
 
     public float getScale() {
-        if (scaling == null)
+//        if (scaling == null)
             return 1;
-        return scaling.getScale();
+//        return scaling.getScale();
     }
 
     public int getVisibleWidth() {
@@ -1267,11 +1262,12 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
     }
 
     public boolean isColorModel(COLORMODEL cm) {
-        return (decoder.getColorModel() != null) && decoder.getColorModel().equals(cm);
+     //   return (decoder.getColorModel() != null) && decoder.getColorModel().equals(cm);
+        return false;
     }
 
     public void setColorModel(COLORMODEL cm) {
-        decoder.setColorModel(cm);
+     //   decoder.setColorModel(cm);
     }
 
     public boolean getMouseFollowPan() {
@@ -1325,13 +1321,13 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
 
     @Override
     public void OnConnectionSuccess(long instance) {
-        rdpcomm.setIsInNormalProtocol(true);
+//       rdpcomm.setIsInNormalProtocol(true);
         Log.v(TAG, "OnConnectionSuccess");
     }
 
     @Override
     public void OnConnectionFailure(long instance) {
-        rdpcomm.setIsInNormalProtocol(false);
+//        rdpcomm.setIsInNormalProtocol(false);
         Log.v(TAG, "OnConnectionFailure");
         if (maintainConnection)
             handler.sendEmptyMessage(Constants.RDP_UNABLE_TO_CONNECT);
@@ -1339,7 +1335,7 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
 
     @Override
     public void OnDisconnecting(long instance) {
-        rdpcomm.setIsInNormalProtocol(false);
+//        rdpcomm.setIsInNormalProtocol(false);
         Log.v(TAG, "OnDisconnecting");
         if (maintainConnection)
             handler.sendEmptyMessage(Constants.RDP_CONNECT_FAILURE);
@@ -1347,7 +1343,7 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
 
     @Override
     public void OnDisconnected(long instance) {
-        rdpcomm.setIsInNormalProtocol(false);
+//        rdpcomm.setIsInNormalProtocol(false);
         Log.v(TAG, "OnDisconnected");
         if (maintainConnection)
             handler.sendEmptyMessage(Constants.RDP_CONNECT_FAILURE);
@@ -1360,7 +1356,7 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
 
     @Override
     public void OnSettingsChanged(int width, int height, int bpp) {
-        android.util.Log.e(TAG, "onSettingsChanged called, wxh: " + width + "x" + height);
+        Log.e(TAG, "onSettingsChanged called, wxh: " + width + "x" + height);
 
         // If this is aSPICE, we need to initialize the communicator and remote keyboard and mouse now.
         if (isSpice) {
@@ -1370,7 +1366,7 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
             int remoteWidth = getRemoteWidth(getWidth(), getHeight());
             int remoteHeight = getRemoteHeight(getWidth(), getHeight());
             if (width != remoteWidth || height != remoteHeight) {
-                android.util.Log.e(TAG, "Requesting new res: " + remoteWidth + "x" + remoteHeight);
+                Log.e(TAG, "Requesting new res: " + remoteWidth + "x" + remoteHeight);
                 rfbconn.requestResolution(remoteWidth, remoteHeight);
             }
         }
@@ -1383,10 +1379,10 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
             showFatalMessageAndQuit(getContext().getString(R.string.error_out_of_memory));
             return;
         }
-        android.util.Log.i(TAG, "Using CompactBufferBitmapData.");
+        Log.i(TAG, "Using CompactBufferBitmapData.");
 
         // TODO: In RDP mode, pointer is not visible, so we use a soft cursor.
-        initializeSoftCursor();
+       // initializeSoftCursor();
 
         // Set the drawable for the canvas, now that we have it (re)initialized.
         handler.post(drawableSetter);
@@ -1402,7 +1398,7 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
 
     @Override
     public boolean OnAuthenticate(StringBuilder username, StringBuilder domain, StringBuilder password) {
-        android.util.Log.e(TAG, "onAuthenticate called.");
+        Log.e(TAG, "onAuthenticate called.");
         if (maintainConnection)
             handler.sendEmptyMessage(Constants.RDP_AUTH_FAILED);
         return false;
@@ -1454,27 +1450,28 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
         return 0;
     }
 
+
     @Override
     public void OnGraphicsUpdate(int x, int y, int width, int height) {
-        //android.util.Log.e(TAG, "OnGraphicsUpdate called: " + x +", " + y + " + " + width + "x" + height );
-        if (isRdp) {
-            if (bitmapData != null && bitmapData.mbitmap != null && session != null) {
-                synchronized (bitmapData.mbitmap) {
-                    LibFreeRDP.updateGraphics(session.getInstance(), bitmapData.mbitmap, x, y, width, height);
-                }
-            }
-        } else {
-            synchronized (bitmapData.mbitmap) {
-                spicecomm.UpdateBitmap(bitmapData.mbitmap, x, y, width, height);
-            }
+        Log.d(TAG, "OnGraphicsUpdate called: " + x + ", " + y + " + " + width + "x" + height);
+//        if (isRdp) {
+//            if (bitmapData != null && bitmapData.mbitmap != null && session != null) {
+//                synchronized (bitmapData.mbitmap) {
+//                    LibFreeRDP.updateGraphics(session.getInstance(), bitmapData.mbitmap, x, y, width, height);
+//                }
+//            }
+//        } else {
+        synchronized (bitmapData.mbitmap) {
+            spicecomm.UpdateBitmap(bitmapData.mbitmap, x, y, width, height);
         }
+//        }
 
         reDraw(x, y, width, height);
     }
 
     @Override
     public void OnGraphicsResize(int width, int height, int bpp) {
-        android.util.Log.e(TAG, "OnGraphicsResize called.");
+        Log.d(TAG, "OnGraphicsResize called.");
         OnSettingsChanged(width, height, bpp);
     }
 

@@ -19,5 +19,7 @@
 package com.iiordanov.tigervnc.rfb;
 
 public class AuthFailureException extends Exception {
-  public AuthFailureException(String s) { super(s); }
+    public AuthFailureException(String s) {
+        super(s);
+    }
 }

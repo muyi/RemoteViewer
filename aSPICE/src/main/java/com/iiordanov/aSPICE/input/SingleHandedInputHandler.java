@@ -29,7 +29,7 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
      * per pan interval
      */
     static final float FLING_FACTOR = 8;
-    
+
     /**
      * @param c
      */
@@ -41,7 +41,7 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
     private void initializeButtons() {
         singleHandOpts = (RelativeLayout) activity.findViewById(R.id.singleHandOpts);
         dragModeButton = (ImageButton) activity.findViewById(R.id.singleDrag);
-        dragModeButton.setOnClickListener(new OnClickListener () {
+        dragModeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 startNewSingleHandedGesture();
@@ -51,9 +51,9 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
                 canvas.displayShortToastMessage(R.string.single_left);
             }
         });
-        
+
         rightDragModeButton = (ImageButton) activity.findViewById(R.id.singleRight);
-        rightDragModeButton.setOnClickListener(new OnClickListener () {
+        rightDragModeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 startNewSingleHandedGesture();
@@ -63,9 +63,9 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
                 canvas.displayShortToastMessage(R.string.single_right);
             }
         });
-        
+
         middleDragModeButton = (ImageButton) activity.findViewById(R.id.singleMiddle);
-        middleDragModeButton.setOnClickListener(new OnClickListener () {
+        middleDragModeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 startNewSingleHandedGesture();
@@ -75,9 +75,9 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
                 canvas.displayShortToastMessage(R.string.single_middle);
             }
         });
-        
+
         scrollButton = (ImageButton) activity.findViewById(R.id.singleScroll);
-        scrollButton.setOnClickListener(new OnClickListener () {
+        scrollButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 startNewSingleHandedGesture();
@@ -88,9 +88,9 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
                 canvas.displayShortToastMessage(R.string.single_scroll);
             }
         });
-        
+
         zoomButton = (ImageButton) activity.findViewById(R.id.singleZoom);
-        zoomButton.setOnClickListener(new OnClickListener () {
+        zoomButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 startNewSingleHandedGesture();
@@ -98,9 +98,9 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
                 canvas.displayShortToastMessage(R.string.single_zoom);
             }
         });
-        
+
         cancelButton = (ImageButton) activity.findViewById(R.id.singleCancel);
-        cancelButton.setOnClickListener(new OnClickListener () {
+        cancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 singleHandOpts.setVisibility(View.GONE);
@@ -111,7 +111,7 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
 
     private void startNewSingleHandedGesture() {
         singleHandOpts.setVisibility(View.GONE);
-        endDragModesAndScrolling ();
+        endDragModesAndScrolling();
         singleHandedGesture = true;
         accumulatedScroll = 0;
     }
@@ -147,7 +147,7 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
 
         if (singleHandedGesture || singleHandedJustEnded)
             return;
-    
+
         boolean buttonsVisible = (singleHandOpts.getVisibility() == View.VISIBLE);
         initializeSingleHandedMode(e);
 
@@ -158,14 +158,14 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
     }
 
     private void initializeSingleHandedMode(MotionEvent e) {
-        eventStartX   = getX(e);
-        eventStartY   = getY(e);
+        eventStartX = getX(e);
+        eventStartY = getY(e);
         xInitialFocus = e.getX();
         yInitialFocus = e.getY();
-        eventAction   = e.getAction();
-        eventMeta     = e.getMetaState();
+        eventAction = e.getAction();
+        eventMeta = e.getMetaState();
         singleHandOpts.setVisibility(View.VISIBLE);
-        
+
         // Move pointer to where we're performing gesture.
         RemotePointer p = canvas.getPointer();
         p.processPointerEvent(eventStartX, eventStartY, eventAction, eventMeta, false, false, false, false, 0);
@@ -179,7 +179,7 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
         boolean buttonsVisible = (singleHandOpts.getVisibility() == View.VISIBLE);
-        
+
         // If the single-handed gesture buttons are visible, reposition pointer.
         if (buttonsVisible) {
             initializeSingleHandedMode(e);
@@ -200,44 +200,45 @@ public class SingleHandedInputHandler extends TouchMouseSwipePanInputHandler {
 
         // If we are not in a single-handed gesture, simply pass events onto parent.
         if (!singleHandedGesture)
-             return super.onScroll(e1, e2, distanceX, distanceY);
-        
+            return super.onScroll(e1, e2, distanceX, distanceY);
+
         // Otherwise, handle scrolling and zooming here.
         if (inSwiping) {
-            twoFingerSwipeUp    = false;
-            twoFingerSwipeDown  = false;
+            twoFingerSwipeUp = false;
+            twoFingerSwipeDown = false;
             twoFingerSwipeRight = false;
-            twoFingerSwipeLeft  = false;
+            twoFingerSwipeLeft = false;
             // Set needed parameters for scroll event to happen in super.super.onTouchEvent.
-            int absX = (int)Math.abs(distanceX);
-            int absY = (int)Math.abs(distanceY);
+            int absX = (int) Math.abs(distanceX);
+            int absY = (int) Math.abs(distanceY);
             if (absY > absX) {
                 // Scrolling up/down.
                 if (distanceY > 0)
-                    twoFingerSwipeDown  = true;
+                    twoFingerSwipeDown = true;
                 else
-                    twoFingerSwipeUp    = true;
-                swipeSpeed = (absY+accumulatedScroll)/15;
+                    twoFingerSwipeUp = true;
+                swipeSpeed = (absY + accumulatedScroll) / 15;
                 accumulatedScroll += absY;
             } else {
                 // Scrolling side to side.
                 if (distanceX > 0)
                     twoFingerSwipeRight = true;
                 else
-                    twoFingerSwipeLeft  = true;
-                swipeSpeed = (absX+accumulatedScroll)/15;
+                    twoFingerSwipeLeft = true;
+                swipeSpeed = (absX + accumulatedScroll) / 15;
                 accumulatedScroll += absY;
             }
             if (swipeSpeed < 1) {
                 swipeSpeed = 0;
             } else
                 accumulatedScroll = 0;
-        } else if (inScaling) {
-            float scaleFactor = 1.0f + distanceY*0.01f;                
-            if (canvas != null && canvas.scaling != null)
-                canvas.scaling.adjust(activity, scaleFactor, xInitialFocus, yInitialFocus);
         }
-        
+//        else if (inScaling) {
+//            float scaleFactor = 1.0f + distanceY * 0.01f;
+//            if (canvas != null && canvas.scaling != null)
+//                canvas.scaling.adjust(activity, scaleFactor, xInitialFocus, yInitialFocus);
+//        }
+
         return true;
     }
 }

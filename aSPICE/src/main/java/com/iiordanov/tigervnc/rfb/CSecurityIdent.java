@@ -18,38 +18,44 @@
 
 package com.iiordanov.tigervnc.rfb;
 
-import com.iiordanov.tigervnc.rdr.*;
-import com.iiordanov.tigervnc.vncviewer.*;
+import com.iiordanov.tigervnc.rdr.OutStream;
+import com.iiordanov.tigervnc.vncviewer.CConn;
 
 public class CSecurityIdent extends CSecurity {
 
-  public CSecurityIdent() { }
-
-  public boolean processMsg(CConnection cc) {
-    OutStream os = cc.getOutStream();
-
-    StringBuffer username = new StringBuffer();
-
-    CConn.upg.getUserPasswd(username, null);
-
-    // Return the response to the server
-    os.writeU32(username.length());
-    try {
-      byte[] utf8str = username.toString().getBytes("UTF8");
-      os.writeBytes(utf8str, 0, username.length());
-    } catch(java.io.UnsupportedEncodingException e) {
-      e.printStackTrace();
+    public CSecurityIdent() {
     }
-    os.flush();
-    return true;
-  }
 
-  public int getType() { return Security.secTypeIdent; }
+    public boolean processMsg(CConnection cc) {
+        OutStream os = cc.getOutStream();
 
-  java.net.Socket sock;
-  UserPasswdGetter upg;
+        StringBuffer username = new StringBuffer();
 
-  static LogWriter vlog = new LogWriter("Ident");
-  public String description() { return "No Encryption"; }
+        CConn.upg.getUserPasswd(username, null);
+
+        // Return the response to the server
+        os.writeU32(username.length());
+        try {
+            byte[] utf8str = username.toString().getBytes("UTF8");
+            os.writeBytes(utf8str, 0, username.length());
+        } catch (java.io.UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        os.flush();
+        return true;
+    }
+
+    public int getType() {
+        return Security.secTypeIdent;
+    }
+
+    java.net.Socket sock;
+    UserPasswdGetter upg;
+
+    static LogWriter vlog = new LogWriter("Ident");
+
+    public String description() {
+        return "No Encryption";
+    }
 
 }

@@ -19,33 +19,49 @@
 package com.iiordanov.tigervnc.rfb;
 
 public class BoolParameter extends VoidParameter {
-  public BoolParameter(String name_, String desc_, boolean v) {
-    super(name_, desc_);
-    value = v;
-    defValue = v;
-  }
+    public BoolParameter(String name_, String desc_, boolean v) {
+        super(name_, desc_);
+        value = v;
+        defValue = v;
+    }
 
-  public boolean setParam(String v) {
-    if (v.equals("1") || v.equalsIgnoreCase("on") ||
-        v.equalsIgnoreCase("true") || v.equalsIgnoreCase("yes"))
-      value = true;
-    else if (v.equals("0") || v.equalsIgnoreCase("off") ||
-        v.equalsIgnoreCase("false") || v.equalsIgnoreCase("no"))
-      value = false;
-    else
-      return false;
-    return true;
-  }
+    public boolean setParam(String v) {
+        if (v.equals("1") || v.equalsIgnoreCase("on") ||
+                v.equalsIgnoreCase("true") || v.equalsIgnoreCase("yes"))
+            value = true;
+        else if (v.equals("0") || v.equalsIgnoreCase("off") ||
+                v.equalsIgnoreCase("false") || v.equalsIgnoreCase("no"))
+            value = false;
+        else
+            return false;
+        return true;
+    }
 
-  public boolean setParam() { setParam(true); return true; }
-  public void setParam(boolean b) { value = b; }
+    public boolean setParam() {
+        setParam(true);
+        return true;
+    }
 
-  public String getDefaultStr() { return defValue ? "1" : "0"; }
-  public String getValueStr() { return value ? "1" : "0"; }
-  public boolean isBool() { return true; }
+    public void setParam(boolean b) {
+        value = b;
+    }
 
-  final public boolean getValue() { return value; }
+    public String getDefaultStr() {
+        return defValue ? "1" : "0";
+    }
 
-  protected boolean value;
-  protected boolean defValue;
+    public String getValueStr() {
+        return value ? "1" : "0";
+    }
+
+    public boolean isBool() {
+        return true;
+    }
+
+    final public boolean getValue() {
+        return value;
+    }
+
+    protected boolean value;
+    protected boolean defValue;
 }

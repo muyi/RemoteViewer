@@ -18,29 +18,31 @@
 
 package com.iiordanov.tigervnc.rfb;
 
-import com.iiordanov.tigervnc.rdr.*;
+import com.iiordanov.tigervnc.rdr.InStream;
 
 public class RREDecoder extends Decoder {
 
-  public RREDecoder(CMsgReader reader_) { reader = reader_; }
-
-  public void readRect(Rect r, CMsgHandler handler) {
-    InStream is = reader.getInStream();
-    int bytesPerPixel = handler.cp.pf().bpp / 8;
-    boolean bigEndian = handler.cp.pf().bigEndian;
-    int nSubrects = is.readU32();
-    int bg = is.readPixel(bytesPerPixel, bigEndian);
-    handler.fillRect(r, bg);
-
-    for (int i = 0; i < nSubrects; i++) {
-      int pix = is.readPixel(bytesPerPixel, bigEndian);
-      int x = is.readU16();
-      int y = is.readU16();
-      int w = is.readU16();
-      int h = is.readU16();
-      handler.fillRect(new Rect(x, y, w, h), pix);
+    public RREDecoder(CMsgReader reader_) {
+        reader = reader_;
     }
-  }
 
-  CMsgReader reader;
+    public void readRect(Rect r, CMsgHandler handler) {
+        InStream is = reader.getInStream();
+        int bytesPerPixel = handler.cp.pf().bpp / 8;
+        boolean bigEndian = handler.cp.pf().bigEndian;
+        int nSubrects = is.readU32();
+        int bg = is.readPixel(bytesPerPixel, bigEndian);
+        handler.fillRect(r, bg);
+
+        for (int i = 0; i < nSubrects; i++) {
+            int pix = is.readPixel(bytesPerPixel, bigEndian);
+            int x = is.readU16();
+            int y = is.readU16();
+            int w = is.readU16();
+            int h = is.readU16();
+            handler.fillRect(new Rect(x, y, w, h), pix);
+        }
+    }
+
+    CMsgReader reader;
 }

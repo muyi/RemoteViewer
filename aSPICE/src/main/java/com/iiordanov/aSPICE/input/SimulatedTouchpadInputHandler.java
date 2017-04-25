@@ -13,9 +13,7 @@ public class SimulatedTouchpadInputHandler extends AbstractGestureInputHandler {
     float sensitivity = 0;
     boolean acceleration = false;
 
-    /**
-     * @param c
-     */
+
     public SimulatedTouchpadInputHandler(RemoteCanvasActivity va, RemoteCanvas v, boolean slowScrolling) {
         super(va, v, slowScrolling);
         acceleration = activity.getAccelerationEnabled();
@@ -84,8 +82,8 @@ public class SimulatedTouchpadInputHandler extends AbstractGestureInputHandler {
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         RemotePointer p = canvas.getPointer();
         final int action = e2.getActionMasked();
-        final int meta   = e2.getMetaState();
-        
+        final int meta = e2.getMetaState();
+
         // TODO: This is a workaround for Android 4.2
         boolean twoFingers = false;
         if (e1 != null)
@@ -99,10 +97,10 @@ public class SimulatedTouchpadInputHandler extends AbstractGestureInputHandler {
         // to stick a spiteful onScroll with a MASSIVE delta here. 
         // This would cause the mouse pointer to jump to another place suddenly.
         // Hence, we ignore onScroll after scaling until we lift all pointers up.
-        if (twoFingers||inSwiping||inScaling||scalingJustFinished)
+        if (twoFingers || inSwiping || inScaling || scalingJustFinished)
             return true;
 
-        activity.showZoomer(true);
+//        activity.showZoomer(true);
 
         // If the gesture has just began, then don't allow a big delta to prevent
         // pointer jumps at the start of scrolling.
@@ -113,7 +111,7 @@ public class SimulatedTouchpadInputHandler extends AbstractGestureInputHandler {
             distXQueue.clear();
             distYQueue.clear();
         }
-        
+
         distXQueue.add(distanceX);
         distYQueue.add(distanceY);
 
@@ -130,7 +128,7 @@ public class SimulatedTouchpadInputHandler extends AbstractGestureInputHandler {
         // Make distanceX/Y display density independent.
         distanceX = sensitivity * distanceX / displayDensity;
         distanceY = sensitivity * distanceY / displayDensity;
-        
+
         // Compute the absolute new mouse position on the remote site.
         int newRemoteX = (int) (p.getX() + getDelta(-distanceX));
         int newRemoteY = (int) (p.getY() + getDelta(-distanceY));
@@ -149,8 +147,8 @@ public class SimulatedTouchpadInputHandler extends AbstractGestureInputHandler {
         activity.stopPanner();
         return true;
     }
-    
-    protected int getX (MotionEvent e) {
+
+    protected int getX(MotionEvent e) {
         RemotePointer p = canvas.getPointer();
         if (dragMode || rightDragMode || middleDragMode) {
             float distanceX = e.getX() - dragX;
@@ -162,7 +160,7 @@ public class SimulatedTouchpadInputHandler extends AbstractGestureInputHandler {
         return p.getX();
     }
 
-    protected int getY (MotionEvent e) {
+    protected int getY(MotionEvent e) {
         RemotePointer p = canvas.getPointer();
         if (dragMode || rightDragMode || middleDragMode) {
             float distanceY = e.getY() - dragY;
@@ -185,7 +183,8 @@ public class SimulatedTouchpadInputHandler extends AbstractGestureInputHandler {
      * when user is making a small movement on touch screen.
      * Scale up delta when delta is big. This allows fast mouse movement when
      * user is flinging.
-     * @param deltaX
+     *
+     * @param delta
      * @return
      */
     private float fineCtrlScale(float delta) {
@@ -193,8 +192,8 @@ public class SimulatedTouchpadInputHandler extends AbstractGestureInputHandler {
         delta = Math.abs(delta);
         if (delta <= 15) {
             delta *= 0.75;
-        } else if (acceleration && delta <= 70 ) {
-            delta *= delta/20;
+        } else if (acceleration && delta <= 70) {
+            delta *= delta / 20;
         } else if (acceleration) {
             delta *= 4.5;
         }

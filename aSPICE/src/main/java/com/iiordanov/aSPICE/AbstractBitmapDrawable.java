@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2012 Iordan Iordanov
  * Copyright (C) 2009 Michael A. MacDonald
- *
+ * <p>
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ * <p>
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ * <p>
  * You should have received a copy of the GNU General Public License
  * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
@@ -47,7 +47,7 @@ public class AbstractBitmapDrawable extends DrawableContainer {
     Paint _whitePaint;
     Paint _blackPaint;
 
-    AbstractBitmapDrawable(AbstractBitmapData data)    {
+    AbstractBitmapDrawable(AbstractBitmapData data) {
         this.data = data;
         cursorRect = new RectF();
         clipRect = new Rect();
@@ -63,35 +63,36 @@ public class AbstractBitmapDrawable extends DrawableContainer {
         _blackPaint = new Paint();
         _blackPaint.setColor(0xff000000);
     }
-    
+
     void draw(Canvas canvas, int xoff, int yoff) {
         try {
             canvas.drawBitmap(data.mbitmap, xoff, yoff, _defaultPaint);
             canvas.drawBitmap(softCursor, cursorRect.left, cursorRect.top, _defaultPaint);
-        } catch (Throwable e) { }
+        } catch (Throwable e) {
+        }
     }
 
     void setCursorRect(int x, int y, float w, float h, int hX, int hY) {
         hotX = hX;
         hotY = hY;
-        cursorRect.left   = x-hotX;
-        cursorRect.right  = cursorRect.left + w;
-        cursorRect.top    = y-hotY;
+        cursorRect.left = x - hotX;
+        cursorRect.right = cursorRect.left + w;
+        cursorRect.top = y - hotY;
         cursorRect.bottom = cursorRect.top + h;
     }
-    
+
     void moveCursorRect(int x, int y) {
         setCursorRect(x, y, cursorRect.width(), cursorRect.height(), hotX, hotY);
     }
 
-    void setSoftCursor (int[] newSoftCursorPixels) {
+    void setSoftCursor(int[] newSoftCursorPixels) {
         Bitmap oldSoftCursor = softCursor;
-        softCursor = Bitmap.createBitmap(newSoftCursorPixels, (int)cursorRect.width(),
-                                         (int)cursorRect.height(), Bitmap.Config.ARGB_8888);
+        softCursor = Bitmap.createBitmap(newSoftCursorPixels, (int) cursorRect.width(),
+                (int) cursorRect.height(), Bitmap.Config.ARGB_8888);
         softCursorInit = true;
         oldSoftCursor.recycle();
     }
-    
+
     /* (non-Javadoc)
      * @see android.graphics.drawable.DrawableContainer#getIntrinsicHeight()
      */
@@ -123,7 +124,7 @@ public class AbstractBitmapDrawable extends DrawableContainer {
     public boolean isStateful() {
         return false;
     }
-    
+
     public void dispose() {
         drawing = false;
         if (softCursor != null)
@@ -133,7 +134,7 @@ public class AbstractBitmapDrawable extends DrawableContainer {
         clipRect = null;
         toDraw = null;
     }
-    
+
     protected void startDrawing() {
         drawing = true;
     }

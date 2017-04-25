@@ -19,26 +19,33 @@
 package com.iiordanov.tigervnc.rfb;
 
 public class IntParameter extends VoidParameter {
-  public IntParameter(String name_, String desc_, int v) {
-    super(name_, desc_);
-    value = v;
-    defValue = v;
-  }
-
-  public boolean setParam(String v) {
-    try {
-      value = Integer.parseInt(v);
-    } catch (NumberFormatException e) {
-      return false;
+    public IntParameter(String name_, String desc_, int v) {
+        super(name_, desc_);
+        value = v;
+        defValue = v;
     }
-    return true;
-  }
 
-  public String getDefaultStr() { return Integer.toString(defValue); }
-  public String getValueStr() { return Integer.toString(value); }
+    public boolean setParam(String v) {
+        try {
+            value = Integer.parseInt(v);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
 
-  public int getValue() { return value; }
+    public String getDefaultStr() {
+        return Integer.toString(defValue);
+    }
 
-  protected int value;
-  protected int defValue;
+    public String getValueStr() {
+        return Integer.toString(value);
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    protected int value;
+    protected int defValue;
 }

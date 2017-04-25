@@ -20,15 +20,17 @@ package com.iiordanov.tigervnc.rdr;
 
 public class MemInStream extends InStream {
 
-  public MemInStream(byte[] data, int offset, int len) {
-    b = data;
-    ptr = offset;
-    end = offset + len;
-  }
+    public MemInStream(byte[] data, int offset, int len) {
+        b = data;
+        ptr = offset;
+        end = offset + len;
+    }
 
-  public int pos() { return ptr; }
+    public int pos() {
+        return ptr;
+    }
 
-  protected int overrun(int itemSize, int nItems, boolean wait) {
-    throw new EndOfStream();
-  }
+    protected int overrun(int itemSize, int nItems, boolean wait) {
+        throw new EndOfStream();
+    }
 }

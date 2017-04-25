@@ -34,13 +34,15 @@
 package com.iiordanov.tigervnc.rfb;
 
 abstract public class CSecurity {
-  abstract public boolean processMsg(CConnection cc);
-  abstract public int getType();
-  abstract public String description();
-  
-  /*
-   * Use variable directly instead of dumb get/set methods.
-   * It MUST be set by viewer.
-   */
-  static UserPasswdGetter upg;
+    abstract public boolean processMsg(CConnection cc);
+
+    abstract public int getType();
+
+    abstract public String description();
+
+    /*
+     * Use variable directly instead of dumb get/set methods.
+     * It MUST be set by viewer.
+     */
+    static UserPasswdGetter upg;
 }
