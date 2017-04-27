@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -44,7 +45,6 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 /**
  * @author Michael A. MacDonald
- *
  */
 public class IntroTextDialog extends Dialog {
 
@@ -137,7 +137,12 @@ public class IntroTextDialog extends Dialog {
         sb.append("\n");
         sb.append(getContext().getResources().getString(R.string.intro_version_text));
         TextView introTextView = (TextView) findViewById(R.id.textIntroText);
-        introTextView.setText(Html.fromHtml(sb.toString()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            introTextView.setText(Html.fromHtml(sb.toString(), Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            introTextView.setText(Html.fromHtml(sb.toString()));
+        }
+        //       introTextView.setText(Html.fromHtml(sb.toString()));
         introTextView.setMovementMethod(LinkMovementMethod.getInstance());
         ((Button) findViewById(R.id.buttonCloseIntro)).setOnClickListener(new View.OnClickListener() {
 

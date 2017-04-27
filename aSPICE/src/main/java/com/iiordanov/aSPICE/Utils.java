@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
+import android.os.Build;
 import android.text.Html;
 import android.util.Log;
 import android.view.ViewConfiguration;
@@ -124,7 +125,12 @@ public class Utils {
     public static void showMessage(Context _context, String title, String message, int icon, DialogInterface.OnClickListener ackHandler) {
         AlertDialog.Builder builder = new AlertDialog.Builder(_context);
         builder.setTitle(title);
-        builder.setMessage(Html.fromHtml(message));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            builder.setMessage(Html.fromHtml(message, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            builder.setMessage(Html.fromHtml(message));
+        }
+//        builder.setMessage(Html.fromHtml(message));
         builder.setCancelable(false);
         builder.setPositiveButton(R.string.acknowledged_text, ackHandler);
         builder.setIcon(icon);
@@ -141,6 +147,7 @@ public class Utils {
 
     /**
      * Determine if a string is null or empty
+     *
      * @param s The string to comapare
      * @return true iff s is null or empty
      */
@@ -151,7 +158,8 @@ public class Utils {
     }
 
     /**
-     * Converts a given sequence of bytes to a human-readable colon-separated Hex format. 
+     * Converts a given sequence of bytes to a human-readable colon-separated Hex format.
+     *
      * @param bytes
      * @return
      */
@@ -173,6 +181,7 @@ public class Utils {
 
     /**
      * Forces the appearance of a menu in the given context.
+     *
      * @param ctx
      */
     public static void showMenu(Context ctx) {

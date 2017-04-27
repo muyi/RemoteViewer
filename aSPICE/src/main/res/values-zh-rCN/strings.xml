@@ -261,7 +261,7 @@ Known issues:
     <string name="meta_key_title">Send Special Keys</string>
     <string name="mouse_follow_pan">Mouse follows pan</string>
     <string name="new_list_button">New List</string>
-    <string name="new_connection">New Connection</string>
+    <string name="new_connection">新建连接</string>
     <string name="nickname_caption">Nickname</string>
     <string name="nickname_caption_hint">标题(可选)</string>
     <string name="off">Off</string>
@@ -315,11 +315,8 @@ Known issues:
     <string name="repeater_dialog_title">VNC Server Behind Repeater</string>
     <string name="repeater_empty_text">No repeater</string>
     <string name="repeater_save">Use</string>
-    <string name="right_alt_as_iso_l3_shift">R-Alt as ISO L3 Shift (VNC only)</string>
     <string name="rotate_dpad">Rotate Bluetooth or software D-Pad</string>
     <string name="save_as_copy">Save as Copy</string>
-    <string name="scaling">Scaling</string>
-    <string name="scaling_zoomable">Zoomable</string>
     <!-- Send selected metakey -->
     <string name="send_button">Send</string>
     <string name="send_key_again">Send Key Again</string>
@@ -391,7 +388,7 @@ Known issues:
     <string name="verification_code">Verification Code</string>
     <string name="verification_code_message">Please enter the multi-factor authentication Verification Code</string>
     <string name="super_check">Super</string>
-    <string name="help">Help</string>
+    <string name="help">帮助</string>
     <string name="show_advanced_settings">高级设置</string>
     <string name="x">x</string>
     <string name="_22">22</string>

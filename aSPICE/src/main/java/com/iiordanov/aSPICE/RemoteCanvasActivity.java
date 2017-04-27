@@ -112,7 +112,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
 //    private static final int scalingModeIds[] = {R.id.itemZoomable, R.id.itemFitToScreen,
 //            R.id.itemOneToOne};
 
-//    ZoomControls zoomer;
+    //    ZoomControls zoomer;
     Panner panner;
     SSHConnection sshConnection;
     Handler handler;
@@ -705,9 +705,6 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
      */
     private void setExtraKeysVisibility(int visibility, boolean forceVisible) {
         Configuration config = getResources().getConfiguration();
-        //Log.e(TAG, "Hardware kbd hidden: " + Integer.toString(config.hardKeyboardHidden));
-        //Log.e(TAG, "Any keyboard hidden: " + Integer.toString(config.keyboardHidden));
-        //Log.e(TAG, "Keyboard type: " + Integer.toString(config.keyboard));
 
         boolean makeVisible = forceVisible;
         if (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO)
@@ -898,7 +895,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.e(TAG,"onCreateOptionsMenu");
+        Log.e(TAG, "onCreateOptionsMenu");
         try {
             getMenuInflater().inflate(R.menu.canvasactivitymenu, menu);
 
@@ -1057,14 +1054,14 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
         }
         return result;
     }
-
-    int getModeIdFromHandler(AbstractInputHandler handler) {
-        for (int id : inputModeIds) {
-            if (handler == getInputHandlerById(id))
-                return id;
-        }
-        return R.id.itemInputTouchPanZoomMouse;
-    }
+//
+//    int getModeIdFromHandler(AbstractInputHandler handler) {
+//        for (int id : inputModeIds) {
+//            if (handler == getInputHandlerById(id))
+//                return id;
+//        }
+//        return R.id.itemInputTouchPanZoomMouse;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -1220,6 +1217,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
         inputHandler = null;
         System.gc();
     }
+
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent evt) {

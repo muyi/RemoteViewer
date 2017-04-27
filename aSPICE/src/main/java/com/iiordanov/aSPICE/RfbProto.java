@@ -26,7 +26,6 @@ package com.iiordanov.aSPICE;
 import android.util.Log;
 
 import com.iiordanov.aSPICE.input.RemoteKeyboard;
-import com.iiordanov.aSPICE.input.RemoteVncKeyboard;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -1519,8 +1518,8 @@ class RfbProto implements RfbConnectable {
 
         if ((newModifiers & RemoteKeyboard.RALT_MASK) != (oldModifiers & RemoteKeyboard.RALT_MASK)) {
             int ralt_xkeysym = 0xffea;
-            if (RemoteVncKeyboard.rAltAsIsoL3Shift)
-                ralt_xkeysym = 0xfe03;
+//            if (RemoteVncKeyboard.rAltAsIsoL3Shift)
+//                ralt_xkeysym = 0xfe03;
             writeKeyEvent(ralt_xkeysym, (newModifiers & RemoteKeyboard.RALT_MASK) != 0);
         }
 
