@@ -71,6 +71,17 @@ add_library(lib_usbredirparser STATIC IMPORTED )
 set_target_properties(lib_usbredirparser PROPERTIES IMPORTED_LOCATION
     ${native_lib_DIR}/libs/deps/lib/libusbredirparser.a)
 
+add_library(lib_flac STATIC IMPORTED )
+set_target_properties(lib_flac PROPERTIES IMPORTED_LOCATION
+    ${native_lib_DIR}/libs/deps/lib/libFLAC.a)
+
+add_library(lib_soup STATIC IMPORTED )
+set_target_properties(lib_soup PROPERTIES IMPORTED_LOCATION
+    ${native_lib_DIR}/libs/deps/lib/libsoup-2.4.a)
+
+add_library(lib_xml STATIC IMPORTED )
+set_target_properties(lib_xml PROPERTIES IMPORTED_LOCATION
+    ${native_lib_DIR}/libs/deps/lib/libxml2.a)
 
 # shared lib will also be tucked into APK and sent to target
 # refer to app/build.gradle, jniLibs section for that purpose.
@@ -109,4 +120,6 @@ include_directories(${native_lib_DIR}/libs/deps/include
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 add_library(libspice SHARED ${spice_SRCS1} ${spice_SRCS2} ${spice_SRCS3} ${spice_SRCS4} ${spice_SRCS5})
-target_link_libraries(libspice log android lib_celt lib_crypto lib_govirt lib_jpeg lib_rest lib_ssl lib_usb lib_usbredirhost lib_usbredirparser)
+target_link_libraries(libspice log android lib_celt lib_crypto lib_govirt lib_jpeg
+                      lib_rest lib_ssl lib_usb lib_usbredirhost lib_usbredirparser
+                      lib_xml lib_soup lib_flac)
