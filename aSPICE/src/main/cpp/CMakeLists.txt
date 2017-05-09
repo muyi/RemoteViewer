@@ -105,9 +105,7 @@ include_directories(${native_lib_DIR}/libs/deps/include
                     ${native_lib_DIR}/libs/deps/include/usbredirhost
                     ${native_lib_DIR}/libs/deps/include/usbredirparser
                     ${native_lib_DIR}/libs/deps/include/glib-2.0
-                    ${native_lib_DIR}/libs/deps/include/glib-2.0/gio
-                    ${native_lib_DIR}/libs/deps/include/glib-2.0/glib
-                    ${native_lib_DIR}/libs/deps/include/glib-2.0/gobject
+                    ${native_lib_DIR}/libs/deps/include/gio-unix-2.0
                     ${native_lib_DIR}/libs/deps/include/FLAC
                     ${native_src_DIR}
                     ${native_src_DIR}/android

@@ -109,10 +109,7 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
             R.id.itemInputTouchPanZoomMouse,
             R.id.itemInputDragPanZoomMouse,
             R.id.itemInputSingleHanded};
-//    private static final int scalingModeIds[] = {R.id.itemZoomable, R.id.itemFitToScreen,
-//            R.id.itemOneToOne};
 
-    //    ZoomControls zoomer;
     Panner panner;
     SSHConnection sshConnection;
     Handler handler;

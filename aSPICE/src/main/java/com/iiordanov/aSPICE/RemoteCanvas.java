@@ -199,12 +199,6 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
         displayHeight = metrics.heightPixels;
         Log.w(TAG, "displayWidth=" + displayWidth + ",displayHeight=" + displayHeight + ",displayDensity=" + displayDensity);
 
-
-//        if (android.os.Build.MODEL.contains("BlackBerry") ||
-//                android.os.Build.BRAND.contains("BlackBerry") ||
-//                android.os.Build.MANUFACTURER.contains("BlackBerry")) {
-//            bb = true;
-//        }
     }
 
 
@@ -239,6 +233,8 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
         // Make this dialog cancellable only upon hitting the Back button and not touching outside.
         pd.setCanceledOnTouchOutside(false);
 
+
+
         Thread t = new Thread() {
             public void run() {
                 try {
@@ -264,11 +260,7 @@ public class RemoteCanvas extends AppCompatImageView implements LibFreeRDP.UIEve
                     if (isSpice) {
                         startSpiceConnection();
                     }
-//                    else if (isRdp) {
-//                        startRdpConnection();
-//                    } else {
-//                        startVncConnection();
-//                    }
+
                 } catch (Throwable e) {
                     if (maintainConnection) {
                         Log.e(TAG, e.toString());
