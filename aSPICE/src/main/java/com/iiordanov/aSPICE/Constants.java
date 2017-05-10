@@ -20,13 +20,15 @@
 
 package com.iiordanov.aSPICE;
 
+import android.os.Build;
+
 /**
  * Keys for intent values
  */
 public class Constants {
     public static final String CONNECTION = "com.iiordanov.bVNC.CONNECTION";
 
-    public static final int SDK_INT = android.os.Build.VERSION.SDK_INT;
+    public static final int SDK_INT = Build.VERSION.SDK_INT;
 
     public static final int CONN_TYPE_PLAIN = 0;
     public static final int CONN_TYPE_SSH = 1;

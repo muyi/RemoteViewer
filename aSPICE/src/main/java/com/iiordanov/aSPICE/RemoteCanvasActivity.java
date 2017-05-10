@@ -252,11 +252,15 @@ public class RemoteCanvasActivity extends FragmentActivity implements OnKeyListe
                 }
             }
 
-            if (connection.getPort() == 0)
+            if (connection.getPort() == 0){
                 connection.setPort(Constants.DEFAULT_VNC_PORT);
+            }
 
-            if (connection.getSshPort() == 0)
+
+            if (connection.getSshPort() == 0){
                 connection.setSshPort(Constants.DEFAULT_SSH_PORT);
+            }
+
         }
     }
 
