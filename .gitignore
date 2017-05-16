@@ -1,0 +1,10 @@
+# Created by .ignore support plugin (hsz.mobi)
+/build/
+/.gradle/
+/.gitignore
+/.idea/
+/aSPICE/.externalNativeBuild/
+/aSPICE/build/
+/PubkeyGenerator/build/
+
+

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sqlcipher-javadoc">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/aSPICE/libs/sqlcipher-javadoc.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

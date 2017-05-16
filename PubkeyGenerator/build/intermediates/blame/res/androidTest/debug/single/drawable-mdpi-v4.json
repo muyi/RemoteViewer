@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/muyi/project/RemoteViewer/PubkeyGenerator/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/ic_action_search.png",
+        "source": "/home/muyi/project/RemoteViewer/PubkeyGenerator/build/intermediates/bundles/debug/res/drawable-mdpi-v4/ic_action_search.png"
+    },
+    {
+        "merged": "/home/muyi/project/RemoteViewer/PubkeyGenerator/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/ic_launcher.png",
+        "source": "/home/muyi/project/RemoteViewer/PubkeyGenerator/build/intermediates/bundles/debug/res/drawable-mdpi-v4/ic_launcher.png"
+    }
+]

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sshlib-2.2.5-20170115.082822-13">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/PubkeyGenerator/libs/sshlib-2.2.5-20170115.082822-13.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

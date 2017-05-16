@@ -1,0 +1,22 @@
+# ninja log v5
+0	320	0	CMakeFiles/libspice.dir/android/android-spicy.c.o	aa4beeed7d374947
+1	433	0	CMakeFiles/libspice.dir/gtk/spice-glib-enums.c.o	59fba8fc0f932af8
+0	482	0	CMakeFiles/libspice.dir/android/android-spice-widget.c.o	88d65d43c517fd9b
+0	539	0	CMakeFiles/libspice.dir/android/android-io.c.o	829a1b4d862c61e4
+1	584	0	CMakeFiles/libspice.dir/gtk/channel-usbredir.c.o	e96d4edf45340855
+0	617	0	CMakeFiles/libspice.dir/android/android-service.c.o	34a863ccca6c6602
+0	650	0	CMakeFiles/libspice.dir/gtk/vmcstream.c.o	341413cde6657179
+1	690	0	CMakeFiles/libspice.dir/gtk/usb-device-manager.c.o	46420bc6ac82ae7d
+1	701	0	CMakeFiles/libspice.dir/gtk/channel-cursor.c.o	1b44079468029334
+4	330	0	CMakeFiles/libspice.dir/gtk/spice-util.c.o	f76d740f3f02d952
+2	380	0	CMakeFiles/libspice.dir/gtk/spice-cmdline.c.o	f127d9f6446f12c6
+4	399	0	CMakeFiles/libspice.dir/gtk/wocky-http-proxy.c.o	3476b2797b2b0e9a
+3	406	0	CMakeFiles/libspice.dir/gtk/usbutil.c.o	3f63a8f721153f4a
+2	467	0	CMakeFiles/libspice.dir/gtk/spice-gstaudio.c.o	ed48687a22ab48fb
+4	495	0	CMakeFiles/libspice.dir/gtk/spice-option.c.o	b5f8abdde3455d4b
+2	280	0	CMakeFiles/libspice.dir/gtk/smartcard-manager.c.o	9e7fbf7faa867938
+2	369	0	CMakeFiles/libspice.dir/gtk/spice-uri.c.o	11e271bddb2aead4
+1	384	0	CMakeFiles/libspice.dir/gtk/spice-proxy.c.o	38bc84ec5fc1c818
+2	530	0	CMakeFiles/libspice.dir/gtk/channel-webdav.c.o	7f764f9599af8179
+2	552	0	CMakeFiles/libspice.dir/gtk/channel-inputs.c.o	3b44bb86527ae25e
+2	611	0	CMakeFiles/libspice.dir/gtk/spice-channel.c.o	6e97e1fa97dbc175

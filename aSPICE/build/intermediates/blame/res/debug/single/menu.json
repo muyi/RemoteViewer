@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "/home/muyi/project/RemoteViewer/aSPICE/build/intermediates/res/merged/debug/menu/metakeymenu.xml",
+        "source": "/home/muyi/project/RemoteViewer/aSPICE/src/main/res/menu/metakeymenu.xml"
+    },
+    {
+        "merged": "/home/muyi/project/RemoteViewer/aSPICE/build/intermediates/res/merged/debug/menu/androidspicemenu.xml",
+        "source": "/home/muyi/project/RemoteViewer/aSPICE/src/main/res/menu/androidspicemenu.xml"
+    },
+    {
+        "merged": "/home/muyi/project/RemoteViewer/aSPICE/build/intermediates/res/merged/debug/menu/canvasactivitymenu.xml",
+        "source": "/home/muyi/project/RemoteViewer/aSPICE/src/main/res/menu/canvasactivitymenu.xml"
+    },
+    {
+        "merged": "/home/muyi/project/RemoteViewer/aSPICE/build/intermediates/res/merged/debug/menu/activity_pubkey_generator.xml",
+        "source": "/home/muyi/project/RemoteViewer/PubkeyGenerator/build/intermediates/bundles/default/res/menu/activity_pubkey_generator.xml"
+    },
+    {
+        "merged": "/home/muyi/project/RemoteViewer/aSPICE/build/intermediates/res/merged/debug/menu/intro_dialog_menu.xml",
+        "source": "/home/muyi/project/RemoteViewer/aSPICE/src/main/res/menu/intro_dialog_menu.xml"
+    }
+]

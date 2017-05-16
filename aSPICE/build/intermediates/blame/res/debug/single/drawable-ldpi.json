@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/muyi/project/RemoteViewer/aSPICE/build/intermediates/res/merged/debug/drawable-ldpi/mouse_icon.png",
+        "source": "/home/muyi/project/RemoteViewer/aSPICE/src/main/res/drawable-ldpi/mouse_icon.png"
+    },
+    {
+        "merged": "/home/muyi/project/RemoteViewer/aSPICE/build/intermediates/res/merged/debug/drawable-ldpi/cursor.png",
+        "source": "/home/muyi/project/RemoteViewer/aSPICE/src/main/res/drawable-ldpi/cursor.png"
+    }
+]

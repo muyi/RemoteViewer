@@ -1,0 +1,3 @@
+/home/muyi/project/RemoteViewer/aSPICE/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/home/muyi/project/RemoteViewer/aSPICE/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/muyi/project/RemoteViewer/aSPICE/.externalNativeBuild/cmake/debug/armeabi-v7a/CMakeFiles/libspice.dir
